@@ -1,10 +1,14 @@
+import { BaseStyles } from '@nice-boys/components';
+import { ThemeProvider } from 'emotion-theming';
 import React from 'react';
+import styled from 'styled-components';
 import Vizceral from 'vizceral-react';
 import 'vizceral-react/dist/vizceral.css';
 
 import './App.css';
 import { logger } from './logger';
-
+import { Navigation } from './Navigation';
+import { theme } from './theme';
 
 const traffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -54,15 +58,23 @@ const traffic = {
   ],
 };
 
+const Container = styled.main`
+  height: 100%;
+`;
+
 export const App: React.FC = () => {
   return (
-    <div className="App">
-      <Vizceral
-        traffic={traffic}
-        viewChanged={logger.bind(logger, 'viewChanged')}
-        viewUpdated={logger.bind(logger, 'viewUpdated')}
-        objectHighlighted={logger.bind(logger, 'objectHighlighted')}
-      />
-    </div>
+    <ThemeProvider theme={theme}>
+      <BaseStyles />
+      <Container>
+        <Navigation />
+        <Vizceral
+          traffic={traffic}
+          viewChanged={logger.bind(logger, 'viewChanged')}
+          viewUpdated={logger.bind(logger, 'viewUpdated')}
+          objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+        />
+      </Container>
+    </ThemeProvider>
   );
 };
