@@ -3,6 +3,8 @@ import Vizceral from 'vizceral-react';
 import 'vizceral-react/dist/vizceral.css';
 
 import './App.css';
+import { logger } from './logger';
+
 
 const traffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -77,7 +79,12 @@ const traffic = {
 export const App: React.FC = () => {
   return (
     <div className="App">
-      <Vizceral traffic={traffic} />
+      <Vizceral
+        traffic={traffic}
+        viewChanged={logger.bind(logger, 'viewChanged')}
+        viewUpdated={logger.bind(logger, 'viewUpdated')}
+        objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+      />
     </div>
   );
 };
