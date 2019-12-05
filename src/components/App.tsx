@@ -59,7 +59,7 @@ const traffic = {
   ],
 };
 
-const Container = styled.main`
+const Main = styled.main`
   height: 100%;
 `;
 
@@ -67,20 +67,27 @@ export const App: React.FC = () => {
   return (
     <>
       <BaseStyles />
-      <Container>
-        <Navigation />
+      <Navigation />
+      <Main>
         <Flex height="100%">
-          <Card width="100%">
-            <Vizceral
-              traffic={traffic}
-              viewChanged={logger.bind(logger, 'viewChanged')}
-              viewUpdated={logger.bind(logger, 'viewUpdated')}
-              objectHighlighted={logger.bind(logger, 'objectHighlighted')}
-            />
-          </Card>
+          <Flex>
+            <Card title="Recent Trades" width="400px" height="100px">
+              hello
+            </Card>
+          </Flex>
+          <Flex width="100%">
+            <Card width="100%" title="Network">
+              <Vizceral
+                traffic={traffic}
+                viewChanged={logger.bind(logger, 'viewChanged')}
+                viewUpdated={logger.bind(logger, 'viewUpdated')}
+                objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+              />
+            </Card>
+          </Flex>
         </Flex>
-        <Footer />
-      </Container>
+      </Main>
+      <Footer />
     </>
   );
 };
