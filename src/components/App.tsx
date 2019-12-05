@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { logger } from '../logger';
 
 import { Card } from './Card';
+import { Footer } from './Footer';
 import { Navigation } from './Navigation';
 import Vizceral from './vizceral-react/vizceral';
 import './vizceral-react/vizceral.css';
@@ -78,6 +79,7 @@ export const App: React.FC = () => {
             />
           </Card>
         </Flex>
+        <Footer />
       </Container>
     </>
   );
