@@ -1,10 +1,9 @@
 import React from 'react';
-import Vizceral from 'vizceral-react';
-import 'vizceral-react/dist/vizceral.css';
+import Vizceral from './components/vizceral-react/vizceral';
+import './components/vizceral-react/vizceral.css';
 
 import './App.css';
 import { logger } from './logger';
-
 
 const traffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
