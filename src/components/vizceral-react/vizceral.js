@@ -1,9 +1,8 @@
-
-
-import { isEqual } from 'lodash';
-import React from 'react'; // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
-import VizceralGraph from 'vizceral';
-import PropTypes from 'prop-types';
+/* tslint:disable */
+import { isEqual } from "lodash";
+import React from "react"; // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
+import VizceralGraph from "vizceral";
+import PropTypes from "prop-types";
 
 function getPerformanceNow() {
   const g = window;
@@ -12,7 +11,7 @@ function getPerformanceNow() {
     if (perf != null) {
       try {
         const perfNow = perf.now();
-        if (typeof perfNow === 'number') {
+        if (typeof perfNow === "number") {
           return perfNow;
         }
       } catch (e) {
@@ -58,13 +57,13 @@ class Vizceral extends React.Component {
     this.vizceral = new VizceralGraph(this.refs.vizCanvas, this.props.targetFramerate);
     this.updateStyles(this.props.styles);
 
-    this.vizceral.on('viewChanged', this.props.viewChanged);
-    this.vizceral.on('objectHighlighted', this.props.objectHighlighted);
-    this.vizceral.on('objectHovered', this.props.objectHovered);
-    this.vizceral.on('nodeUpdated', this.props.nodeUpdated);
-    this.vizceral.on('nodeContextSizeChanged', this.props.nodeContextSizeChanged);
-    this.vizceral.on('matchesFound', this.props.matchesFound);
-    this.vizceral.on('viewUpdated', this.props.viewUpdated);
+    this.vizceral.on("viewChanged", this.props.viewChanged);
+    this.vizceral.on("objectHighlighted", this.props.objectHighlighted);
+    this.vizceral.on("objectHovered", this.props.objectHovered);
+    this.vizceral.on("nodeUpdated", this.props.nodeUpdated);
+    this.vizceral.on("nodeContextSizeChanged", this.props.nodeContextSizeChanged);
+    this.vizceral.on("matchesFound", this.props.matchesFound);
+    this.vizceral.on("viewUpdated", this.props.viewUpdated);
 
     // Pass our defaults to Vizceral in the case that it has different defaults.
     this.vizceral.setOptions({
@@ -143,7 +142,7 @@ class Vizceral extends React.Component {
   render() {
     return (
       <div className="vizceral">
-        <canvas style={{ width: '100%', height: '100%' }} ref="vizCanvas" />
+        <canvas style={{ width: "100%", height: "100%" }} ref="vizCanvas" />
         <div className="vizceral-notice"></div>
       </div>
     );
@@ -233,7 +232,7 @@ Vizceral.defaultProps = {
   connectionHighlighted: () => {},
   definitions: {},
   filters: [],
-  match: '',
+  match: "",
   nodeHighlighted: () => {},
   nodeUpdated: () => {},
   nodeContextSizeChanged: () => {},

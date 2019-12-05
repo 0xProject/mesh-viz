@@ -1,7 +1,7 @@
 import React from 'react';
 import { BoxProps, Flex } from 'rebass';
 
-import { colors } from './theme';
+import { colors } from '../theme';
 
 export interface CardProps extends BoxProps {
   title?: string;

@@ -3,12 +3,12 @@ import React from 'react';
 import { Flex } from 'rebass';
 import styled from 'styled-components';
 
-import './App.css';
+import { logger } from '../logger';
+
 import { Card } from './Card';
-import Vizceral from './components/vizceral-react/vizceral';
-import './components/vizceral-react/vizceral.css';
-import { logger } from './logger';
 import { Navigation } from './Navigation';
+import Vizceral from './vizceral-react/vizceral';
+import './vizceral-react/vizceral.css';
 
 const traffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
