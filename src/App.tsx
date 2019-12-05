@@ -1,10 +1,12 @@
 import { BaseStyles } from '@nice-boys/components';
 import React from 'react';
+import { Flex } from 'rebass';
 import styled from 'styled-components';
 import Vizceral from 'vizceral-react';
 import 'vizceral-react/dist/vizceral.css';
 
 import './App.css';
+import { Card } from './Card';
 import { logger } from './logger';
 import { Navigation } from './Navigation';
 
@@ -66,12 +68,16 @@ export const App: React.FC = () => {
       <BaseStyles />
       <Container>
         <Navigation />
-        <Vizceral
-          traffic={traffic}
-          viewChanged={logger.bind(logger, 'viewChanged')}
-          viewUpdated={logger.bind(logger, 'viewUpdated')}
-          objectHighlighted={logger.bind(logger, 'objectHighlighted')}
-        />
+        <Flex height="100%">
+          <Card width="100%">
+            <Vizceral
+              traffic={traffic}
+              viewChanged={logger.bind(logger, 'viewChanged')}
+              viewUpdated={logger.bind(logger, 'viewUpdated')}
+              objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+            />
+          </Card>
+        </Flex>
       </Container>
     </>
   );
