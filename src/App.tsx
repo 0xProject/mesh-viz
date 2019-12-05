@@ -1,5 +1,4 @@
 import { BaseStyles } from '@nice-boys/components';
-import { ThemeProvider } from 'emotion-theming';
 import React from 'react';
 import styled from 'styled-components';
 import Vizceral from 'vizceral-react';
@@ -8,7 +7,6 @@ import 'vizceral-react/dist/vizceral.css';
 import './App.css';
 import { logger } from './logger';
 import { Navigation } from './Navigation';
-import { theme } from './theme';
 
 const traffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -64,7 +62,7 @@ const Container = styled.main`
 
 export const App: React.FC = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <>
       <BaseStyles />
       <Container>
         <Navigation />
@@ -75,6 +73,6 @@ export const App: React.FC = () => {
           objectHighlighted={logger.bind(logger, 'objectHighlighted')}
         />
       </Container>
-    </ThemeProvider>
+    </>
   );
 };
