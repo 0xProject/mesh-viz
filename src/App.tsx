@@ -2,11 +2,11 @@ import { BaseStyles } from '@nice-boys/components';
 import React from 'react';
 import { Flex } from 'rebass';
 import styled from 'styled-components';
-import Vizceral from 'vizceral-react';
-import 'vizceral-react/dist/vizceral.css';
 
 import './App.css';
 import { Card } from './Card';
+import Vizceral from './components/vizceral-react/vizceral';
+import './components/vizceral-react/vizceral.css';
 import { logger } from './logger';
 import { Navigation } from './Navigation';
 
