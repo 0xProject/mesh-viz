@@ -60,7 +60,7 @@ const GraphHeaderContainer = styled.div`
   height: 100px;
   flex-direction: row;
   width: 100%;
-  border-bottom: 3px solid #2e2e2e;
+  border-bottom: 2px solid #2e2e2e;
   padding-top: 20px;
   padding-bottom: 8px;
   color: #fff;
@@ -110,16 +110,33 @@ const SidePanelContainer = styled.div`
   flex-direction: column;
   overflow-y: auto;
   flex-basis: 300px;
+  border-left: 2px solid #2e2e2e;
 `;
 
-const SidePanelHeaderContainr = styled.div`
+const SidePanelHeaderContainer = styled.div`
   display: flex;
   height: 100px;
+  border-bottom: 2px solid #2e2e2e;
+  flex-direction: row;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const LineGraphContainer = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const SidePanelHeaderLabel = styled.div`
+  font-size: 24px;
+  color: ${colors.whiteText};
+`;
+
+const SidePanelHeaderSecondaryLabel = styled.div`
+  font-size: 24px;
+  color: ${colors.secondaryText};
 `;
 
 export const App: React.FC = () => {
@@ -233,10 +250,12 @@ export const App: React.FC = () => {
               </VizceralContainer>
             </MainGraphPanelContainer>
             <SidePanelContainer>
-              <SidePanelHeaderContainr>12234</SidePanelHeaderContainr>
+              <SidePanelHeaderContainer>
+                <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
+                <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
+              </SidePanelHeaderContainer>
             </SidePanelContainer>
           </GraphContainer>
-          {/* </Flex> */}
         </Main>
         <Footer />
       </AppContainer>
