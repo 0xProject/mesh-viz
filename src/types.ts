@@ -67,6 +67,13 @@ export interface MeshNode {
   multiAddress: string;
   peerId: string;
   name: string;
+  geo?: {
+    country: string;
+    city: string;
+    lat: number;
+    long: number;
+    timezone: string;
+  };
 }
 
 export interface SnapshotResponse {
