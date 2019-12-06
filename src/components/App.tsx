@@ -1,10 +1,10 @@
 import { format } from 'date-fns';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useInterval } from 'react-use';
 import { Box, Flex, Text } from 'rebass';
 import styled from 'styled-components';
 
-import { backendClient } from '../backend_client';
+import { backendClient, backendWebSocketClient } from '../backend_client';
 import { DATA_POLL_DELAY_MS } from '../constants';
 import { useOrderWatcher } from '../hooks/use_order_watcher';
 import { logger } from '../logger';
@@ -14,7 +14,7 @@ import { ReactComponent as ConnectionsSvg } from '../svgs/modeling.svg';
 import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { ReactComponent as XIconSvg } from '../svgs/x.svg';
 import { colors } from '../theme';
-import { VizceralTraffic } from '../types';
+import { MeshOrderRecievedMessage, VizceralTraffic } from '../types';
 import { utils } from '../utils';
 
 import { Card } from './Card';
@@ -193,7 +193,7 @@ const SidePanelHeaderSecondaryLabel = styled.div`
   }
 `;
 
-const RecentTradeTable = styled.table`
+const Table = styled.table`
   width: calc(100% - 32px);
   color: #fff;
   margin: 10px 16px;
@@ -202,7 +202,7 @@ const RecentTradeTable = styled.table`
   overflow-y: auto;
 `;
 
-const RecentTradeTableHeaderRow = styled.tr`
+const TableHeaderRow = styled.tr`
   border-bottom: 2px solid #2e2e2e;
 `;
 
@@ -268,6 +268,7 @@ const TokenIcon = styled.img`
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined);
+  const [meshEvents, setMeshEvents] = useState<MeshOrderRecievedMessage[]>([]);
   // tslint:disable-next-line: boolean-naming
   const [userOverrideNodePanel, setUserOverrideNodePanel] = useState<boolean>(false);
 
@@ -300,6 +301,18 @@ export const App: React.FC = () => {
     fetchAndSetDataAsync();
   }, DATA_POLL_DELAY_MS);
 
+  useEffect(() => {
+    backendWebSocketClient.onmessage = msg => {
+      const data = JSON.parse(msg.data);
+      if (data.name === 'NEW_MESH_ORDER_RECEIVED') {
+        const orderReceivedMessage: MeshOrderRecievedMessage = data;
+        setMeshEvents(prevMeshEvents => {
+          return [...prevMeshEvents, orderReceivedMessage];
+        });
+      }
+    };
+  }, []);
+
   let connectionCount;
   let activeNodes;
   if (traffic && traffic.nodes.length) {
@@ -308,7 +321,6 @@ export const App: React.FC = () => {
   }
 
   const { filledOrders, addedOrders } = useOrderWatcher();
-
   return (
     <AppContainer>
       <Navigation />
@@ -329,11 +341,26 @@ export const App: React.FC = () => {
             </LineGraphContainer>
           </Card> */}
 
-          <Card maxHeight={400} overflowY={'auto'} title="mesh event stream">
-            {/* events here... */}
+          <Card height={325} overflowY={'auto'} title="mesh event stream">
+            <Table>
+              <TableHeaderRow>
+                <TableHeaderItem>From</TableHeaderItem>
+                <TableHeaderItem>To</TableHeaderItem>
+                <TableHeaderItem>Order Hash</TableHeaderItem>
+              </TableHeaderRow>
+              {meshEvents.map(({ payload }) => {
+                return (
+                  <RecentTrandeTableDataRow key={`${payload.from}-${payload.to}-${payload.orderHash}`}>
+                    <TableDataItem>{utils.truncateString(payload.from)}</TableDataItem>
+                    <TableDataItem>{utils.truncateString(payload.to)}</TableDataItem>
+                    <TableDataItem>{utils.truncateString(payload.orderHash)}</TableDataItem>
+                  </RecentTrandeTableDataRow>
+                );
+              })}
+            </Table>
           </Card>
 
-          <Card height={400} overflowY={'auto'} title="new orders">
+          <Card height={325} overflowY={'auto'} title="new orders">
             <Box margin={10}>
               {addedOrders.slice(0, 7).map(order => (
                 <Flex key={order.orderHash} flexDirection="row" alignItems="center">
@@ -365,13 +392,13 @@ export const App: React.FC = () => {
             </Box>
           </Card>
 
-          <Card maxHeight={400} overflowY={'auto'} title="recent completed trades" subtitle="last 24 hours">
-            <RecentTradeTable>
-              <RecentTradeTableHeaderRow>
+          <Card height={325} mb={0} overflowY={'auto'} title="recent completed trades" subtitle="last 24 hours">
+            <Table>
+              <TableHeaderRow>
                 <TableHeaderItem>Maker</TableHeaderItem>
                 <TableHeaderItem>Taker</TableHeaderItem>
                 <TableHeaderItem>Time</TableHeaderItem>
-              </RecentTradeTableHeaderRow>
+              </TableHeaderRow>
               {filledOrders.map(trade => {
                 return (
                   <RecentTrandeTableDataRow key={trade.orderHash}>
@@ -385,7 +412,7 @@ export const App: React.FC = () => {
                   </RecentTrandeTableDataRow>
                 );
               })}
-            </RecentTradeTable>
+            </Table>
           </Card>
           {/* <Card title="volume" subtitle="last 24 hours">
             <LineGraphContainer>

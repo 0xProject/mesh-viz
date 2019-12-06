@@ -79,3 +79,14 @@ export interface MeshNode {
 export interface SnapshotResponse {
   meshNodes: MeshNode[];
 }
+
+export interface MeshOrderRecievedMessagePayload {
+  from: string;
+  to: string;
+  orderHash: string;
+}
+
+export interface MeshOrderRecievedMessage {
+  name: 'NEW_MESH_ORDER_RECEIVED';
+  payload: MeshOrderRecievedMessagePayload;
+}
