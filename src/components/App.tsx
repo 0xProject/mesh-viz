@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { backendClient } from '../backend_client';
 import { logger } from '../logger';
 import { VizceralTraffic } from '../types';
+import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
+import { colors } from '../theme';
 
 import { Card } from './Card';
 import { Footer } from './Footer';
@@ -128,8 +130,91 @@ const baseTraffic: VizceralTraffic = {
   //   },
   // ],
 };
+const AppContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  max-height: 100vh;
+  max-width: 100vw;
+  padding-left: 32px;
+  padding-right: 32px;
+`;
 
 const Main = styled.main`
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+`;
+
+const GraphContainer = styled.div`
+  background-color: ${colors.greyBg};
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  margin-left: 20px;
+`;
+
+const GraphHeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  width: 100%;
+  border-bottom: 3px solid #2e2e2e;
+  padding-top: 20px;
+  padding-bottom: 8px;
+  color: #fff;
+  padding-left: 20px;
+`;
+
+const GraphHeaderMetricContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+  flex-direction: row;
+`;
+
+const GraphHeaderMetricLabel = styled.div`
+  color: ${colors.secondaryText};
+  font-size: 18px;
+  padding-bottom: 10px;
+`;
+
+const GraphHeaderMetricValue = styled.div`
+  color: ${colors.whiteText};
+  font-size: 24px;
+`;
+
+const HeaderMetricDataContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 16px;
+`;
+
+const MainGraphPanelContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+`;
+
+// todo(jj) Figure out how to do container ratio better w/out max height ?
+// works for now...
+const VizceralContainer = styled.div`
+  display: flex;
+  flex: 1;
+  max-height: 80%; =
+`;
+
+const SidePanelContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-basis: 300px;
+`;
+
+const HeaderVerticalDivider = styled.div`
+  background-color: #2b2b2b;
+  width: 2px;
   height: 100%;
 `;
 
@@ -149,27 +234,51 @@ export const App: React.FC = () => {
   return (
     <>
       <BaseStyles />
-      <Navigation />
-      <Main>
-        <Flex height="100%">
-          <Flex>
-            <Card title="Recent Trades" width="400px" height="100px">
+      <AppContainer>
+        <Navigation />
+        <Main>
+          <Flex style={{ flexBasis: 370 }} flexDirection={'column'}>
+            <Card title="trades" subtitle={'last 24 hours'}>
+              hello
+            </Card>
+            <Card title="recent trades" subtitle={'last 24 hours'}>
+              hello
+            </Card>
+            <Card title="volume" subtitle={'last 24 hours'}>
               hello
             </Card>
           </Flex>
-          <Flex width="100%">
-            <Card width="100%" title="Network">
-              <Vizceral
-                traffic={traffic}
-                viewChanged={logger.bind(logger, 'viewChanged')}
-                viewUpdated={logger.bind(logger, 'viewUpdated')}
-                objectHighlighted={logger.bind(logger, 'objectHighlighted')}
-              />
-            </Card>
-          </Flex>
-        </Flex>
-      </Main>
-      <Footer />
+          <GraphContainer>
+            <MainGraphPanelContainer>
+              <GraphHeaderContainer>
+                <GraphHeaderMetricContainer>
+                  <ActiveNodesSvg fill={'#fff'} width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>12346</GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+                <HeaderVerticalDivider/>
+                <GraphHeaderMetricContainer>2</GraphHeaderMetricContainer>
+                <HeaderVerticalDivider/>
+
+                <GraphHeaderMetricContainer>3</GraphHeaderMetricContainer>
+              </GraphHeaderContainer>
+              <VizceralContainer>
+                <Vizceral
+                  traffic={traffic}
+                  viewChanged={logger.bind(logger, 'viewChanged')}
+                  viewUpdated={logger.bind(logger, 'viewUpdated')}
+                  objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+                />
+              </VizceralContainer>
+            </MainGraphPanelContainer>
+            <SidePanelContainer>yeet</SidePanelContainer>
+          </GraphContainer>
+          {/* </Flex> */}
+        </Main>
+        <Footer />
+      </AppContainer>
     </>
   );
 };

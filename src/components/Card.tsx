@@ -11,13 +11,17 @@ export interface CardProps extends BoxProps {
 export const Card: React.FC<CardProps> = props => {
   const { title, subtitle, ...boxProps } = props;
   return (
-    <Flex justifyContent="start" m={4} bg={colors.greyBg} {...boxProps}>
+    <Flex flexDirection="column" justifyContent="start" mb={4} bg={colors.greyBg} {...boxProps}>
       {title && (
         <Text fontSize={24} p={3} color={colors.whiteText}>
           {title}
         </Text>
       )}
-      {subtitle && <Text>{subtitle}</Text>}
+      {subtitle && (
+        <Text fontSize={18} pl={3} color={colors.secondaryText}>
+          {subtitle}
+        </Text>
+      )}
       {props.children}
     </Flex>
   );
