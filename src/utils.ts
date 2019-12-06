@@ -29,7 +29,7 @@ export const utils = {
     for (const meshNode of meshNodes) {
       const node: VizceralNode = {
         name: meshNode.name,
-        displayName: meshNode.name.substr(meshNode.name.length - 5),
+        displayName: utils.truncateString(meshNode.name),
         metadata: {
           ...meshNode.stats,
           ip: meshNode.ip,
@@ -56,9 +56,11 @@ export const utils = {
       connections,
     };
   },
-
+  truncateString: (str: string, numStartChars: number = 3, numEndChars: number = 5) => {
+    const truncated = `${str.substring(0, numStartChars)}...${str.substr(-numEndChars)}`;
+    return truncated;
+  },
   getTokenIconPath: (symbol: string) => `coins/${symbol.replace('WETH', 'ETH')}.png`,
-
   getEthporerInfo: (address: string) =>
     memoizedFetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=freekey`),
 };
