@@ -1,4 +1,3 @@
-import { BaseStyles } from '@nice-boys/components';
 import React, { useEffect, useState } from 'react';
 import { Flex } from 'rebass';
 import styled from 'styled-components';
@@ -16,6 +15,7 @@ import { Footer } from './Footer';
 import { LineGraphWithTooltip } from './LineGraph';
 import { Navigation } from './Navigation';
 import { Vizceral } from './Vizceral';
+import { useOrderWatcher } from '../use_order_watcher';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -170,7 +170,8 @@ const TableHeaderItem = styled.th`
   margin-bottom: 8px;
   box-sizing: border-box;
   height: 30px;
-  padding: 10px;
+  padding: 10px 0;
+  text-align: left;
 `;
 
 const TableDataItem = styled.td`
@@ -219,26 +220,9 @@ export const App: React.FC = () => {
     activeNodes = traffic.nodes.length;
   }
 
-  const recentTradeData = [
-    {
-      maker: 'ZRX',
-      makerAmount: 1000.1,
-      taker: 'DAI',
-      takerAmount: 56.32,
-      poolName: 'CoolPool',
-      time: '9:50:15',
-      id: '1',
-    },
-    {
-      maker: 'ZRX',
-      makerAmount: 1000.1,
-      taker: 'DAI',
-      takerAmount: 56.32,
-      poolName: 'CoolPool',
-      time: '9:50:15',
-      id: '2',
-    },
-  ];
+  const { filledOrders, allOrders } = useOrderWatcher();
+  // TODO: use allOrders
+
   return (
     <AppContainer>
       <Navigation />
@@ -264,20 +248,18 @@ export const App: React.FC = () => {
               <RecentTradeTableHeaderRow>
                 <TableHeaderItem>Maker</TableHeaderItem>
                 <TableHeaderItem>Taker</TableHeaderItem>
-                <TableHeaderItem>Pool</TableHeaderItem>
                 <TableHeaderItem>Time</TableHeaderItem>
               </RecentTradeTableHeaderRow>
-              {recentTradeData.map(trade => {
+              {filledOrders.map(trade => {
                 return (
-                  <RecentTrandeTableDataRow key={trade.id}>
+                  <RecentTrandeTableDataRow key={trade.orderHash}>
                     <TableDataItem>
-                      {trade.makerAmount} {trade.maker}
+                      {trade.makerAsset.amount} {trade.makerAsset.tokenSymbol}
                     </TableDataItem>
                     <TableDataItem>
-                      {trade.takerAmount} {trade.taker}
+                      {trade.takerAsset.amount} {trade.takerAsset.tokenSymbol}
                     </TableDataItem>
-                    <TableDataItem>{trade.poolName || 'none'}</TableDataItem>
-                    <TableDataItem>{trade.time}</TableDataItem>
+                    <TableDataItem>{`${trade.time.getHours()}:${trade.time.getMinutes()}`}</TableDataItem>
                   </RecentTrandeTableDataRow>
                 );
               })}

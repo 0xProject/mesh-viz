@@ -1,4 +1,24 @@
+import { memoize } from 'lodash';
+
 import { MeshNode, VizceralConnection, VizceralGraph, VizceralNode } from './types';
+
+function memoizePromise<T extends (...args: Args) => PromiseLike<any>, Args extends any[]>(
+  f: T,
+  resolver: (...args: Args) => any = ((a: any) => a) as any
+) {
+  const memorizedFunction = memoize(
+    (async function(...args: Args) {
+      try {
+        return await f(...args);
+      } catch (e) {
+        memorizedFunction.cache.delete(resolver(...args));
+        throw e;
+      }
+    } as any) as T,
+    resolver
+  );
+  return memorizedFunction;
+}
 
 export const utils = {
   getGraphFromMeshNodes: (meshNodes: MeshNode[]): VizceralGraph => {
@@ -30,4 +50,8 @@ export const utils = {
       connections,
     };
   },
+
+  getEthporerInfo: memoizePromise((address: string) =>
+    fetch(`http://api.ethplorer.io/getTokenInfo/${address}?apiKey=freekey`).then(r => r.json())
+  ),
 };
