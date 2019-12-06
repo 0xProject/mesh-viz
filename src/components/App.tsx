@@ -271,9 +271,8 @@ export const App: React.FC = () => {
       <Navigation />
       <Main>
         <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
-          <Card title="trades" subtitle="last 24 hours">
+          {/* <Card title="trades" subtitle="last 24 hours">
             <LineGraphContainer>
-              {/* TODO calculate width height w/ js */}
               <LineGraphWithTooltip
                 width={370}
                 height={200}
@@ -285,8 +284,17 @@ export const App: React.FC = () => {
                 }}
               />
             </LineGraphContainer>
+          </Card> */}
+
+          <Card maxHeight={400} overflowY={'auto'} title="mesh event stream">
+          {/* events here... */}
           </Card>
-          <Card maxHeight={400} overflowY={'auto'} title="recent trades" subtitle="last 24 hours">
+
+          <Card maxHeight={400} overflowY={'auto'} title="new orders">
+          {/* events here... */}
+          </Card>
+
+          <Card maxHeight={400} overflowY={'auto'} title="recent completed trades" subtitle="last 24 hours">
             <RecentTradeTable>
               <RecentTradeTableHeaderRow>
                 <TableHeaderItem>Maker</TableHeaderItem>
@@ -308,9 +316,8 @@ export const App: React.FC = () => {
               })}
             </RecentTradeTable>
           </Card>
-          <Card title="volume" subtitle="last 24 hours">
+          {/* <Card title="volume" subtitle="last 24 hours">
             <LineGraphContainer>
-              {/* TODO calculate width height w/ js */}
               <LineGraphWithTooltip
                 width={370}
                 height={200}
@@ -322,7 +329,7 @@ export const App: React.FC = () => {
                 }}
               />
             </LineGraphContainer>
-          </Card>
+          </Card> */}
         </Flex>
         <GraphContainer>
           <MainGraphPanelContainer>
