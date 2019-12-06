@@ -145,8 +145,7 @@ export const App: React.FC = () => {
   let connectionCount;
   let activeNodes;
   if (traffic && traffic.nodes.length) {
-    // There are two edges for every "connection"
-    connectionCount = traffic.connections.length / 2;
+    connectionCount = traffic.connections.length;
     activeNodes = traffic.nodes.length;
   }
   return (
