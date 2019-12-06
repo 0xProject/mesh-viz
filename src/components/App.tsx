@@ -7,6 +7,7 @@ import { backendClient } from '../backend_client';
 import { logger } from '../logger';
 import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
 import { ReactComponent as ConnectionsSvg } from '../svgs/modeling.svg';
+import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
 
@@ -234,7 +235,7 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
                 {/* <HeaderVerticalDivider /> */}
                 <GraphHeaderMetricContainer>
-                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
+                  <OrderbookSvg fill="#fff" width={40} height={40} />
                   <HeaderMetricDataContainer>
                     <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
                     <GraphHeaderMetricValue>
