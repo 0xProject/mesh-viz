@@ -7,7 +7,7 @@ export const utils = {
     for (const meshNode of meshNodes) {
       const node: VizceralNode = {
         name: meshNode.name,
-        displayName: `Node: ${meshNode.peerId}`,
+        displayName: meshNode.name.substr(meshNode.name.length - 5),
         metadata: meshNode.stats,
       };
       nodes.push(node);
