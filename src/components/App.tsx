@@ -58,7 +58,7 @@ const GraphContainer = styled.div`
 
 const GraphHeaderContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 100px;
   flex-direction: row;
   color: #fff;
@@ -69,11 +69,44 @@ const GraphHeaderContainer = styled.div`
   padding-left: 20px;
 `;
 
+const GraphHeaderMetricsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const GraphHeaderStatusContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 24px;
+`;
+
+const StatusCircle = styled.div`
+  background-color: ${colors.zeroExGreen};
+  border-radius: 100%;
+  height: 16px;
+  width: 16px;
+  margin-right: 12px;
+`;
+
+const StatusLabel = styled.div`
+  font-size: 16px;
+  color: ${colors.whiteText};
+`;
+
+const HeaderVerticalDivider = styled.div`
+  height: 100%;
+  width: 2px;
+  background-color: #2b2b2b;
+  margin-right: 24px;
+`;
+
 const GraphHeaderMetricContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
   flex-direction: row;
+  margin-bottom: 8px;
+  margin-right: 24px;
 `;
 
 const GraphHeaderMetricLabel = styled.div`
@@ -271,9 +304,8 @@ export const App: React.FC = () => {
       <Navigation />
       <Main>
         <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
-          <Card title="trades" subtitle="last 24 hours">
+          {/* <Card title="trades" subtitle="last 24 hours">
             <LineGraphContainer>
-              {/* TODO calculate width height w/ js */}
               <LineGraphWithTooltip
                 width={370}
                 height={200}
@@ -285,8 +317,17 @@ export const App: React.FC = () => {
                 }}
               />
             </LineGraphContainer>
+          </Card> */}
+
+          <Card maxHeight={400} overflowY={'auto'} title="mesh event stream">
+            {/* events here... */}
           </Card>
-          <Card maxHeight={400} overflowY={'auto'} title="recent trades" subtitle="last 24 hours">
+
+          <Card maxHeight={400} overflowY={'auto'} title="new orders">
+            {/* events here... */}
+          </Card>
+
+          <Card maxHeight={400} overflowY={'auto'} title="recent completed trades" subtitle="last 24 hours">
             <RecentTradeTable>
               <RecentTradeTableHeaderRow>
                 <TableHeaderItem>Maker</TableHeaderItem>
@@ -308,9 +349,8 @@ export const App: React.FC = () => {
               })}
             </RecentTradeTable>
           </Card>
-          <Card title="volume" subtitle="last 24 hours">
+          {/* <Card title="volume" subtitle="last 24 hours">
             <LineGraphContainer>
-              {/* TODO calculate width height w/ js */}
               <LineGraphWithTooltip
                 width={370}
                 height={200}
@@ -322,38 +362,44 @@ export const App: React.FC = () => {
                 }}
               />
             </LineGraphContainer>
-          </Card>
+          </Card> */}
         </Flex>
         <GraphContainer>
           <MainGraphPanelContainer>
             <GraphHeaderContainer>
-              <GraphHeaderMetricContainer>
-                <ActiveNodesSvg fill="#fff" width={40} height={40} />
-                <HeaderMetricDataContainer>
-                  <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
-                  <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
-                </HeaderMetricDataContainer>
-              </GraphHeaderMetricContainer>
-              {/* <HeaderVerticalDivider /> */}
-              <GraphHeaderMetricContainer>
-                <ConnectionsSvg fill={'#fff'} width={40} height={40} />
-                <HeaderMetricDataContainer>
-                  <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
-                  <GraphHeaderMetricValue>
-                    {connectionCount ? connectionCount.toLocaleString() : '-'}
-                  </GraphHeaderMetricValue>
-                </HeaderMetricDataContainer>
-              </GraphHeaderMetricContainer>
-              {/* <HeaderVerticalDivider /> */}
-              <GraphHeaderMetricContainer>
-                <OrderbookSvg fill="#fff" width={40} height={40} />
-                <HeaderMetricDataContainer>
-                  <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
-                  <GraphHeaderMetricValue>
-                    {openOrderCount ? openOrderCount.toLocaleString() : '-'}
-                  </GraphHeaderMetricValue>
-                </HeaderMetricDataContainer>
-              </GraphHeaderMetricContainer>
+              <GraphHeaderMetricsContainer>
+                <GraphHeaderMetricContainer>
+                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+                <HeaderVerticalDivider />
+                <GraphHeaderMetricContainer>
+                  <ConnectionsSvg fill={'#fff'} width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>
+                      {connectionCount ? connectionCount.toLocaleString() : '-'}
+                    </GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+                <HeaderVerticalDivider />
+                <GraphHeaderMetricContainer>
+                  <OrderbookSvg fill="#fff" width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>
+                      {openOrderCount ? openOrderCount.toLocaleString() : '-'}
+                    </GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+              </GraphHeaderMetricsContainer>
+              <GraphHeaderStatusContainer>
+                <StatusCircle />
+                <StatusLabel>All systems operational</StatusLabel>
+              </GraphHeaderStatusContainer>
             </GraphHeaderContainer>
             <VizceralContainer>
               {traffic.nodes.length > 0 && (
