@@ -37,7 +37,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "tslint -c tslint.json --format stylish --project ."
+    "lint": "tslint -c tslint.json --format stylish --project .",
+    "deploy": "discharge deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@0x/tslint-config": "^4.0.0",
+    "@static/discharge": "^2.0.1",
     "@types/lodash": "^4.14.149",
     "@types/ramda": "^0.26.36",
     "@types/rebass": "^4.0.3",
