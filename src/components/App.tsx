@@ -8,7 +8,7 @@ import { backendClient } from '../backend_client';
 import { DATA_POLL_DELAY_MS } from '../constants';
 import { useOrderWatcher } from '../hooks/use_order_watcher';
 import { logger } from '../logger';
-import { sraClient } from '../sra_client';
+import { sraV2Client, sraV3Client } from '../sra_client';
 import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
 import { ReactComponent as ConnectionsSvg } from '../svgs/modeling.svg';
 import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
@@ -285,12 +285,16 @@ export const App: React.FC = () => {
 
   useInterval(() => {
     const fetchAndSetDataAsync = async () => {
-      const [graph, orders] = await Promise.all([backendClient.getVizsceralGraphAsync(), sraClient.getOrdersAsync()]);
+      const [graph, v3orders, v2orders] = await Promise.all([
+        backendClient.getVizsceralGraphAsync(),
+        sraV3Client.getOrdersAsync(),
+        sraV2Client.getOrdersAsync(),
+      ]);
       setTraffic({
         ...baseTraffic,
         ...graph,
       });
-      setOpenOrderCount(orders.total);
+      setOpenOrderCount(v3orders.total + v2orders.total);
     };
     // tslint:disable-next-line:no-floating-promises
     fetchAndSetDataAsync();
