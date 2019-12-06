@@ -334,15 +334,27 @@ export const App: React.FC = () => {
               {allOrders.slice(0, 7).map(order => (
                 <Flex key={order.orderHash} flexDirection="row" alignItems="center">
                   <Flex flexDirection="row" padding={10}>
-                    <TokenIcon src={utils.getTokenIconPath(order.makerAsset.tokenSymbol)} />
-                    <TokenIcon src={utils.getTokenIconPath(order.takerAsset.tokenSymbol)} />
+                    <TokenIcon
+                      src={utils.getTokenIconPath(order.makerAsset.tokenSymbol)}
+                      onError={(ev: any) => {
+                        ev.target.src = utils.getTokenIconPath('fallback');
+                      }}
+                    />
+                    <TokenIcon
+                      src={utils.getTokenIconPath(order.takerAsset.tokenSymbol)}
+                      onError={(ev: any) => {
+                        ev.target.src = utils.getTokenIconPath('fallback');
+                      }}
+                    />
                   </Flex>
                   <Box>
                     <Text
                       color={colors.whiteText}
                     >{`${order.makerAsset.amount} ${order.makerAsset.tokenSymbol} for ${order.takerAsset.amount} ${order.takerAsset.tokenSymbol}`}</Text>
 
-                    <Text color={colors.secondaryText}>{format(order.time, 'dd/MM hh:mm:ss')}</Text>
+                    <Text marginTop="5px" color={colors.secondaryText}>
+                      {format(order.time, 'dd/MM h:mm:ss')}
+                    </Text>
                   </Box>
                 </Flex>
               ))}
@@ -365,7 +377,7 @@ export const App: React.FC = () => {
                     <TableDataItem>
                       {trade.takerAsset.amount} {trade.takerAsset.tokenSymbol}
                     </TableDataItem>
-                    <TableDataItem>{format(trade.time, 'hh:mm:ss')}</TableDataItem>
+                    <TableDataItem>{format(trade.time, 'h:mm:ss')}</TableDataItem>
                   </RecentTrandeTableDataRow>
                 );
               })}
