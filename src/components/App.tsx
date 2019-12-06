@@ -105,10 +105,12 @@ const VizceralContainer = styled.div`
   display: flex;
   flex: 1;
   max-height: 80%;
+  padding: 0 16px;
 `;
 
 const SidePanelContainer = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   overflow-y: auto;
   flex-basis: 300px;
@@ -148,6 +150,16 @@ const SidePanelHeaderSecondaryLabel = styled.div`
 
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
+  const [selectedNode, setSelectedNode] = useState<any /* need type? */ | undefined>(undefined);
+
+  const handleNodeClick = (clickNodeEvent: any | undefined) => {
+    if (!clickNodeEvent) {
+      // Implies a blur
+      return setSelectedNode(undefined);
+    }
+    setSelectedNode(clickNodeEvent.name);
+  };
+
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
   useEffect(() => {
     const fetchAndSetTrafficAsync = async () => {
@@ -251,16 +263,22 @@ export const App: React.FC = () => {
                     traffic={traffic}
                     viewChanged={logger.bind(logger, 'viewChanged')}
                     viewUpdated={logger.bind(logger, 'viewUpdated')}
-                    objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+                    objectHighlighted={(e: any) => handleNodeClick(e)}
                   />
                 )}
               </VizceralContainer>
             </MainGraphPanelContainer>
             <SidePanelContainer>
-              <SidePanelHeaderContainer>
-                <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
-                <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
-              </SidePanelHeaderContainer>
+              {selectedNode ? (
+                <div>hello</div>
+              ) : (
+                <>
+                  <SidePanelHeaderContainer>
+                    <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
+                    <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
+                  </SidePanelHeaderContainer>
+                </>
+              )}
             </SidePanelContainer>
           </GraphContainer>
         </Main>
