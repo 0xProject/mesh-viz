@@ -28,7 +28,7 @@ const baseTraffic: VizceralTraffic = {
   // since the root object is a node, it has a name too.
   name: 'Mesh Network',
   // OPTIONAL: The maximum volume seen recently to relatively measure particle density. This 'global' maxVolume is optional because it can be calculated by using all of the required sub-node maxVolumes.
-  maxVolume: 100000,
+  maxVolume: 10000,
   // list of nodes for this graph
   nodes: [],
   // list of edges for this graph
@@ -471,6 +471,7 @@ export const App: React.FC = () => {
                 // Hack updating traffic does not work at the moment
                 <Vizceral
                   traffic={traffic}
+                  allowDraggingOfNodes={true}
                   viewChanged={logger.bind(logger, 'viewChanged')}
                   viewUpdated={logger.bind(logger, 'viewUpdated')}
                   objectHighlighted={(e: any) => handleNodeClick(e)}

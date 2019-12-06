@@ -27,6 +27,7 @@ const defaultStyles = {
   colorTextDisabled: colors.secondaryText,
   colorTraffic: {
     normal: colors.black,
+    green: colors.zeroExGreen,
   },
   colorLabelBorder: colors.greyBg,
   colorLabelText: colors.whiteText,
