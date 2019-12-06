@@ -1,5 +1,6 @@
 import { OrderEvent, OrderEventEndState, WSClient } from '@0x/mesh-rpc-client';
 import { assetDataUtils, ERC20AssetData } from '@0x/order-utils';
+import { compareDesc } from 'date-fns';
 import { useState } from 'react';
 import { logger } from './logger';
 import { utils } from './utils';
@@ -81,5 +82,7 @@ export const useOrderWatcher = () => {
       });
   }
 
-  return { filledOrders: allOrders.filter(o => o.state === OrderEventEndState.Filled), allOrders };
+  const sortedOrders = allOrders.sort((a, b) => compareDesc(a.time, b.time));
+
+  return { filledOrders: sortedOrders.filter(o => o.state === OrderEventEndState.Filled), allOrders: sortedOrders };
 };
