@@ -1,13 +1,13 @@
-import { curveMonotoneX } from '@vx/curve';
-import { localPoint } from '@vx/event';
+import { curveMonotoneX } from "@vx/curve";
+import { localPoint } from "@vx/event";
 // import { GridColumns, GridRows } from '@vx/grid';
-import { appleStock } from '@vx/mock-data';
-import { scaleLinear, scaleTime } from '@vx/scale';
-import { AreaClosed, Bar, Line } from '@vx/shape';
-import { Tooltip, withTooltip } from '@vx/tooltip';
-import { bisector } from 'd3-array';
-import { timeFormat } from 'd3-time-format';
-import React from 'react';
+import { appleStock } from "@vx/mock-data";
+import { scaleLinear, scaleTime } from "@vx/scale";
+import { AreaClosed, Bar, Line } from "@vx/shape";
+import { Tooltip, withTooltip } from "@vx/tooltip";
+import { bisector } from "d3-array";
+import { timeFormat } from "d3-time-format";
+import React from "react";
 
 const stock = appleStock.slice(800);
 
@@ -93,8 +93,8 @@ class Area extends React.Component {
             y={d => yScale(yStock(d))}
             yScale={yScale}
             strokeWidth={1}
-            stroke={'url(#gradient)'}
-            fill={'url(#gradient)'}
+            stroke={"url(#gradient)"}
+            fill={"url(#gradient)"}
             curve={curveMonotoneX}
           />
           <Bar
@@ -141,7 +141,7 @@ class Area extends React.Component {
                 to={{ x: tooltipLeft, y: yMax }}
                 stroke="rgba(92, 119, 235, 1.000)"
                 strokeWidth={2}
-                style={{ pointerEvents: 'none' }}
+                style={{ pointerEvents: "none" }}
                 strokeDasharray="2,2"
               />
               <circle
@@ -153,7 +153,7 @@ class Area extends React.Component {
                 stroke="black"
                 strokeOpacity={0.1}
                 strokeWidth={2}
-                style={{ pointerEvents: 'none' }}
+                style={{ pointerEvents: "none" }}
               />
               <circle
                 cx={tooltipLeft}
@@ -162,7 +162,7 @@ class Area extends React.Component {
                 fill="rgba(92, 119, 235, 1.000)"
                 stroke="white"
                 strokeWidth={2}
-                style={{ pointerEvents: 'none' }}
+                style={{ pointerEvents: "none" }}
               />
             </g>
           )}
@@ -173,8 +173,8 @@ class Area extends React.Component {
               top={tooltipTop - 12}
               left={tooltipLeft + 12}
               style={{
-                backgroundColor: 'rgba(92, 119, 235, 1.000)',
-                color: 'white',
+                backgroundColor: "rgba(92, 119, 235, 1.000)",
+                color: "white",
               }}
             >
               {`$${yStock(tooltipData)}`}
@@ -183,7 +183,7 @@ class Area extends React.Component {
               top={yMax - 14}
               left={tooltipLeft}
               style={{
-                transform: 'translateX(-50%)',
+                transform: "translateX(-50%)",
               }}
             >
               {formatDate(xStock(tooltipData))}
@@ -200,4 +200,4 @@ const LineGraphWithTooltip = withTooltip(Area);
 export {
     LineGraphWithTooltip,
     Area as LineGraph,
-}
+};

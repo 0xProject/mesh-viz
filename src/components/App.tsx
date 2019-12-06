@@ -25,112 +25,10 @@ const baseTraffic: VizceralTraffic = {
   maxVolume: 100000,
   // list of nodes for this graph
   nodes: [],
+  // list of edges for this graph
   connections: [],
-  // nodes: [
-  //   {
-  //     name: 'mesh-node-1',
-  //     // OPTIONAL Override the name on the label
-  //     displayName: 'mesh-node-1',
-  //     //  The class of the node. will default to 'normal' if not provided. The coloring of the UI is based on 'normal', 'warning', and 'danger', so if you want to match the UI coloring, use those class names. Any class you provide will expect to have a style 'colorClassName' available, e.g. if the class is 'fuzzy', you should also call 'vizceral.updateStyles({ colorTraffic: { fuzzy: '#aaaaaa' } })'
-  //     class: 'normal',
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  //   {
-  //     name: 'mesh-node-2',
-  //     // OPTIONAL Override the name on the label
-  //     displayName: 'mesh-node-2',
-  //     //  The class of the node. will default to 'normal' if not provided. The coloring of the UI is based on 'normal', 'warning', and 'danger', so if you want to match the UI coloring, use those class names. Any class you provide will expect to have a style 'colorClassName' available, e.g. if the class is 'fuzzy', you should also call 'vizceral.updateStyles({ colorTraffic: { fuzzy: '#aaaaaa' } })'
-  //     class: 'normal',
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  //   {
-  //     name: 'mesh-node-3',
-  //     // OPTIONAL Override the name on the label
-  //     displayName: 'mesh-node-3',
-  //     //  The class of the node. will default to 'normal' if not provided. The coloring of the UI is based on 'normal', 'warning', and 'danger', so if you want to match the UI coloring, use those class names. Any class you provide will expect to have a style 'colorClassName' available, e.g. if the class is 'fuzzy', you should also call 'vizceral.updateStyles({ colorTraffic: { fuzzy: '#aaaaaa' } })'
-  //     class: 'normal',
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  //   {
-  //     name: 'mesh-node-4',
-  //     // OPTIONAL Override the name on the label
-  //     displayName: 'mesh-node-4',
-  //     //  The class of the node. will default to 'normal' if not provided. The coloring of the UI is based on 'normal', 'warning', and 'danger', so if you want to match the UI coloring, use those class names. Any class you provide will expect to have a style 'colorClassName' available, e.g. if the class is 'fuzzy', you should also call 'vizceral.updateStyles({ colorTraffic: { fuzzy: '#aaaaaa' } })'
-  //     class: 'normal',
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  // ],
-  // connections: [
-  //   {
-  //     // The source node of the connection, will log a warning if the node does not exist.
-  //     source: 'mesh-node-1',
-  //     // The target node of the connection, will log a warning if the node does not exist.
-  //     target: 'mesh-node-2',
-  //     // These are the three default types/colors available in the component and the colors that are used for the nodes themselves. You are welcme to add others, or use other names instead knowing tha they may not match the UI coloring appropriately.
-  //     metrics: {
-  //       normal: 5000,
-  //       danger: 5,
-  //       warning: 0,
-  //     },
-  //     // OPTIONAL Any notices that you want to show up in the sidebar
-  //     notices: [],
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  //   {
-  //     // The source node of the connection, will log a warning if the node does not exist.
-  //     source: 'mesh-node-3',
-  //     // The target node of the connection, will log a warning if the node does not exist.
-  //     target: 'mesh-node-4',
-  //     // These are the three default types/colors available in the component and the colors that are used for the nodes themselves. You are welcme to add others, or use other names instead knowing tha they may not match the UI coloring appropriately.
-  //     metrics: {
-  //       normal: 5000,
-  //       danger: 5,
-  //       warning: 0,
-  //     },
-  //     // OPTIONAL Any notices that you want to show up in the sidebar
-  //     notices: [],
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  //   {
-  //     // The source node of the connection, will log a warning if the node does not exist.
-  //     source: 'mesh-node-2',
-  //     // The target node of the connection, will log a warning if the node does not exist.
-  //     target: 'mesh-node-4',
-  //     // These are the three default types/colors available in the component and the colors that are used for the nodes themselves. You are welcme to add others, or use other names instead knowing tha they may not match the UI coloring appropriately.
-  //     metrics: {
-  //       normal: 5000,
-  //       danger: 5,
-  //       warning: 0,
-  //     },
-  //     // OPTIONAL Any notices that you want to show up in the sidebar
-  //     notices: [],
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  //   {
-  //     // The source node of the connection, will log a warning if the node does not exist.
-  //     source: 'mesh-node-4',
-  //     // The target node of the connection, will log a warning if the node does not exist.
-  //     target: 'mesh-node-2',
-  //     // These are the three default types/colors available in the component and the colors that are used for the nodes themselves. You are welcme to add others, or use other names instead knowing tha they may not match the UI coloring appropriately.
-  //     metrics: {
-  //       normal: 5000,
-  //       danger: 5,
-  //       warning: 0,
-  //     },
-  //     // OPTIONAL Any notices that you want to show up in the sidebar
-  //     notices: [],
-  //     // OPTIONAL Any data that may be handled by a plugin or other data that isn't important to vizceral itself (if you want to show stuff on the page that contains vizceral, for example). Since it is completely optional and not handled by vizceral, you technically could use any index, but this is the convention we use.
-  //     metadata: {},
-  //   },
-  // ],
 };
+
 const AppContainer = styled.div`
   display: flex;
   flex: 1;
@@ -219,20 +117,12 @@ const SidePanelHeaderContainr = styled.div`
   height: 100px;
 `;
 
-const HeaderVerticalDivider = styled.div`
-  background-color: #2b2b2b;
-  width: 2px;
-  height: 100%;
-`;
-
 const LineGraphContainer = styled.div`
   display: flex;
   justify-content: center;
 `;
 
 export const App: React.FC = () => {
-  const [activeNodes, setActiveNodes] = useState<number | undefined>(undefined);
-  const [connectionCount, setConnectionCount] = useState<number | undefined>(undefined);
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
   useEffect(() => {
@@ -249,11 +139,16 @@ export const App: React.FC = () => {
 
   // Set fake data...
   useEffect(() => {
-    setActiveNodes(1739);
-    setConnectionCount(5689);
     setOpenOrderCount(37312);
   }, []);
 
+  let connectionCount;
+  let activeNodes;
+  if (traffic && traffic.nodes.length) {
+    // There are two edges for every "connection"
+    connectionCount = traffic.connections.length / 2;
+    activeNodes = traffic.nodes.length;
+  }
   return (
     <>
       <BaseStyles />
@@ -261,7 +156,7 @@ export const App: React.FC = () => {
         <Navigation />
         <Main>
           <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
-            <Card title="trades" subtitle={'last 24 hours'}>
+            <Card title="trades" subtitle="last 24 hours">
               <LineGraphContainer>
                 {/* TODO calculate width height w/ js */}
                 <LineGraphWithTooltip
@@ -276,10 +171,10 @@ export const App: React.FC = () => {
                 />
               </LineGraphContainer>
             </Card>
-            <Card title="recent trades" subtitle={'last 24 hours'}>
+            <Card title="recent trades" subtitle="last 24 hours">
               hello
             </Card>
-            <Card title="volume" subtitle={'last 24 hours'}>
+            <Card title="volume" subtitle="last 24 hours">
               <LineGraphContainer>
                 {/* TODO calculate width height w/ js */}
                 <LineGraphWithTooltip
@@ -299,7 +194,7 @@ export const App: React.FC = () => {
             <MainGraphPanelContainer>
               <GraphHeaderContainer>
                 <GraphHeaderMetricContainer>
-                  <ActiveNodesSvg fill={'#fff'} width={40} height={40} />
+                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
                   <HeaderMetricDataContainer>
                     <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
                     <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
@@ -307,7 +202,7 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
                 {/* <HeaderVerticalDivider /> */}
                 <GraphHeaderMetricContainer>
-                  <ActiveNodesSvg fill={'#fff'} width={40} height={40} />
+                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
                   <HeaderMetricDataContainer>
                     <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
                     <GraphHeaderMetricValue>
@@ -317,7 +212,7 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
                 {/* <HeaderVerticalDivider /> */}
                 <GraphHeaderMetricContainer>
-                  <ActiveNodesSvg fill={'#fff'} width={40} height={40} />
+                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
                   <HeaderMetricDataContainer>
                     <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
                     <GraphHeaderMetricValue>
@@ -327,12 +222,15 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
               </GraphHeaderContainer>
               <VizceralContainer>
-                <Vizceral
-                  traffic={traffic}
-                  viewChanged={logger.bind(logger, 'viewChanged')}
-                  viewUpdated={logger.bind(logger, 'viewUpdated')}
-                  objectHighlighted={logger.bind(logger, 'objectHighlighted')}
-                />
+                {traffic.nodes.length > 0 &&
+                  // Hack updating traffic does not work at the moment
+                  <Vizceral
+                    traffic={traffic}
+                    viewChanged={logger.bind(logger, 'viewChanged')}
+                    viewUpdated={logger.bind(logger, 'viewUpdated')}
+                    objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+                  />
+                }
               </VizceralContainer>
             </MainGraphPanelContainer>
             <SidePanelContainer>

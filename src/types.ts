@@ -49,8 +49,10 @@ export interface MeshNodeStats {
 }
 
 export interface MeshPeer {
-  ip?: string;
-  multiAddr?: string;
+  ip: string;
+  multiAddr: string;
+  peerId: string;
+  port: string;
 }
 
 export interface MeshNode {
