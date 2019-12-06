@@ -225,6 +225,9 @@ const LineGraphContainer = styled.div`
 `;
 
 export const App: React.FC = () => {
+  const [activeNodes, setActiveNodes] = useState<number | undefined>(undefined);
+  const [connectionCount, setConnectionCount] = useState<number | undefined>(undefined);
+  const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
   useEffect(() => {
     const fetchAndSetTrafficAsync = async () => {
@@ -237,13 +240,21 @@ export const App: React.FC = () => {
     // tslint:disable-next-line:no-floating-promises
     fetchAndSetTrafficAsync();
   }, []);
+
+  // Set fake data...
+  useEffect(() => {
+    setActiveNodes(1739);
+    setConnectionCount(5689);
+    setOpenOrderCount(37312);
+  }, []);
+
   return (
     <>
       <BaseStyles />
       <AppContainer>
         <Navigation />
         <Main>
-          <Flex style={{ flexBasis: 370 }} flexDirection={'column'}>
+          <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
             <Card title="trades" subtitle={'last 24 hours'}>
               <LineGraphContainer>
                 {/* TODO calculate width height w/ js */}
@@ -285,14 +296,29 @@ export const App: React.FC = () => {
                   <ActiveNodesSvg fill={'#fff'} width={40} height={40} />
                   <HeaderMetricDataContainer>
                     <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
-                    <GraphHeaderMetricValue>12346</GraphHeaderMetricValue>
+                    <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
                   </HeaderMetricDataContainer>
                 </GraphHeaderMetricContainer>
-                <HeaderVerticalDivider />
-                <GraphHeaderMetricContainer>2</GraphHeaderMetricContainer>
-                <HeaderVerticalDivider />
-
-                <GraphHeaderMetricContainer>3</GraphHeaderMetricContainer>
+                {/* <HeaderVerticalDivider /> */}
+                <GraphHeaderMetricContainer>
+                  <ActiveNodesSvg fill={'#fff'} width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>
+                      {connectionCount ? connectionCount.toLocaleString() : '-'}
+                    </GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+                {/* <HeaderVerticalDivider /> */}
+                <GraphHeaderMetricContainer>
+                  <ActiveNodesSvg fill={'#fff'} width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>
+                      {openOrderCount ? openOrderCount.toLocaleString() : '-'}
+                    </GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
               </GraphHeaderContainer>
               <VizceralContainer>
                 <Vizceral

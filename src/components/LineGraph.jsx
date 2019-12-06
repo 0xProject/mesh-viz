@@ -1,6 +1,6 @@
 import { curveMonotoneX } from '@vx/curve';
 import { localPoint } from '@vx/event';
-import { GridColumns, GridRows } from '@vx/grid';
+// import { GridColumns, GridRows } from '@vx/grid';
 import { appleStock } from '@vx/mock-data';
 import { scaleLinear, scaleTime } from '@vx/scale';
 import { AreaClosed, Bar, Line } from '@vx/shape';
@@ -45,7 +45,7 @@ class Area extends React.Component {
     });
   }
   render() {
-    const { width, height, margin, hideTooltip, tooltipData, tooltipTop, tooltipLeft, events } = this.props;
+    const { width, height, margin, hideTooltip, tooltipData, tooltipTop, tooltipLeft } = this.props;
     if (width < 10) { return null; }
 
     // bounds
