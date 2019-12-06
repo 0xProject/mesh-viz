@@ -10,13 +10,13 @@ import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { ReactComponent as XIconSvg } from '../svgs/x.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
+import { useOrderWatcher } from '../use_order_watcher';
 
 import { Card } from './Card';
 import { Footer } from './Footer';
 import { LineGraphWithTooltip } from './LineGraph';
 import { Navigation } from './Navigation';
 import { Vizceral } from './Vizceral';
-import { useOrderWatcher } from '../use_order_watcher';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -97,11 +97,13 @@ const MainGraphPanelContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  position: relative;
 `;
 
 // todo(jj) Figure out how to do container ratio better w/out max height ?
 // works for now...
 const VizceralContainer = styled.div`
+  position: relative;
   display: flex;
   flex: 1;
   max-height: 80%;
@@ -109,11 +111,15 @@ const VizceralContainer = styled.div`
 `;
 
 const SidePanelContainer = styled.div`
+  background-color: #000;
+  opacity: 0.8;
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
-  position: relative;
   flex-direction: column;
   overflow-y: auto;
-  flex-basis: 300px;
+  width: 300px;
   border-left: 2px solid #2e2e2e;
 `;
 
@@ -357,43 +363,37 @@ export const App: React.FC = () => {
                   objectHighlighted={(e: any) => handleNodeClick(e)}
                 />
               )}
+
+<SidePanelContainer>
+                {selectedNode && !userOverrideNodePanel ? (
+                  <NodeDetailPanelContainer>
+                    <XIconContainer onClick={() => setUserOverrideNodePanel(true)}>
+                      <XIconSvg />
+                    </XIconContainer>
+                    <NodeDetailPanelTitle>Node {selectedNode.displayName || selectedNodeId}</NodeDetailPanelTitle>
+                    {selectedNode.metadata && (
+                      <>
+                        <NodeDetailLabel>order count</NodeDetailLabel>
+                        <NodeDetailValue>{selectedNode.metadata.numOrders_number || 'n/a'}</NodeDetailValue>
+                        <NodeDetailLabel>peer count</NodeDetailLabel>
+                        <NodeDetailValue>{selectedNode.metadata.numPeers_number || 'n/a'}</NodeDetailValue>
+                        <NodeDetailLabel>ip</NodeDetailLabel>
+                        <NodeDetailValue>{selectedNode.metadata.ip || 'n/a'}</NodeDetailValue>
+                        <NodeDetailLabel>location</NodeDetailLabel>
+                        <NodeDetailValue>
+                          {selectedNode.metadata.geo.city
+                            ? `${selectedNode.metadata.geo.city}, ${selectedNode.metadata.geo.country}`
+                            : selectedNode.metadata.geo.country
+                            ? selectedNode.metadata.geo.country
+                            : 'N/A'}
+                        </NodeDetailValue>
+                      </>
+                    )}
+                  </NodeDetailPanelContainer>
+                ) : null}
+              </SidePanelContainer>
             </VizceralContainer>
           </MainGraphPanelContainer>
-          <SidePanelContainer>
-            {selectedNode && !userOverrideNodePanel ? (
-              <NodeDetailPanelContainer>
-                <XIconContainer onClick={() => setUserOverrideNodePanel(true)}>
-                  <XIconSvg />
-                </XIconContainer>
-                <NodeDetailPanelTitle>Node {selectedNode.displayName || selectedNodeId}</NodeDetailPanelTitle>
-                {selectedNode.metadata && (
-                  <>
-                    <NodeDetailLabel>order count</NodeDetailLabel>
-                    <NodeDetailValue>{selectedNode.metadata.numOrders_number || 'n/a'}</NodeDetailValue>
-                    <NodeDetailLabel>peer count</NodeDetailLabel>
-                    <NodeDetailValue>{selectedNode.metadata.numPeers_number || 'n/a'}</NodeDetailValue>
-                    <NodeDetailLabel>ip</NodeDetailLabel>
-                    <NodeDetailValue>{selectedNode.metadata.ip || 'n/a'}</NodeDetailValue>
-                    <NodeDetailLabel>location</NodeDetailLabel>
-                    <NodeDetailValue>
-                      {selectedNode.metadata.geo.city
-                        ? `${selectedNode.metadata.geo.city}, ${selectedNode.metadata.geo.country}`
-                        : selectedNode.metadata.geo.country
-                        ? selectedNode.metadata.geo.country
-                        : 'N/A'}
-                    </NodeDetailValue>
-                  </>
-                )}
-              </NodeDetailPanelContainer>
-            ) : (
-              <>
-                <SidePanelHeaderContainer>
-                  <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
-                  <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
-                </SidePanelHeaderContainer>
-              </>
-            )}
-          </SidePanelContainer>
         </GraphContainer>
       </Main>
       <Footer />
