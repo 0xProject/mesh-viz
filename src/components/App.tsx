@@ -7,6 +7,7 @@ import { logger } from '../logger';
 import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
 import { ReactComponent as ConnectionsSvg } from '../svgs/modeling.svg';
 import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
+import { ReactComponent as XIconSvg } from '../svgs/x.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
 
@@ -181,15 +182,49 @@ const TableDataItem = styled.td`
   padding-top: 10px;
 `;
 
+const NodeDetailPanelContainer = styled.div`
+  padding-left: 28px;
+`;
+
+const NodeDetailPanelTitle = styled.div`
+  font-size: 24px;
+  color: ${colors.whiteText};
+  padding-top: 42px;
+  margin-bottom: 40px;
+`;
+
+const NodeDetailLabel = styled.div`
+  margin-bottom: 10px;
+  color: ${colors.secondaryText};
+  font-size: 18px;
+`;
+
+const NodeDetailValue = styled.div`
+  margin-bottom: 28px;
+  color: ${colors.whiteText};
+  font-size: 24px;
+`;
+
+const XIconContainer = styled.div`
+  position: absolute;
+  right: 0;
+  padding: 16px;
+  top: 0;
+  cursor: pointer;
+`;
+
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined);
+  // tslint:disable-next-line: boolean-naming
+  const [userOverrideNodePanel, setUserOverrideNodePanel] = useState<boolean>(false);
 
   const handleNodeClick = (clickNodeEvent: any | undefined) => {
     if (!clickNodeEvent) {
       // Implies a blur
       return setSelectedNodeId(undefined);
     }
+    setUserOverrideNodePanel(false);
     setSelectedNodeId(clickNodeEvent.name);
   };
 
@@ -325,8 +360,31 @@ export const App: React.FC = () => {
             </VizceralContainer>
           </MainGraphPanelContainer>
           <SidePanelContainer>
-            {selectedNode ? (
-              <div>hello</div>
+            {selectedNode && !userOverrideNodePanel ? (
+              <NodeDetailPanelContainer>
+                <XIconContainer onClick={() => setUserOverrideNodePanel(true)}>
+                  <XIconSvg />
+                </XIconContainer>
+                <NodeDetailPanelTitle>Node {selectedNode.displayName || selectedNodeId}</NodeDetailPanelTitle>
+                {selectedNode.metadata && (
+                  <>
+                    <NodeDetailLabel>order count</NodeDetailLabel>
+                    <NodeDetailValue>{selectedNode.metadata.numOrders_number || 'n/a'}</NodeDetailValue>
+                    <NodeDetailLabel>peer count</NodeDetailLabel>
+                    <NodeDetailValue>{selectedNode.metadata.numPeers_number || 'n/a'}</NodeDetailValue>
+                    <NodeDetailLabel>ip</NodeDetailLabel>
+                    <NodeDetailValue>{selectedNode.metadata.ip || 'n/a'}</NodeDetailValue>
+                    <NodeDetailLabel>location</NodeDetailLabel>
+                    <NodeDetailValue>
+                      {selectedNode.metadata.geo.city
+                        ? `${selectedNode.metadata.geo.city}, ${selectedNode.metadata.geo.country}`
+                        : selectedNode.metadata.geo.country
+                        ? selectedNode.metadata.geo.country
+                        : 'N/A'}
+                    </NodeDetailValue>
+                  </>
+                )}
+              </NodeDetailPanelContainer>
             ) : (
               <>
                 <SidePanelHeaderContainer>

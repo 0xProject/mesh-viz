@@ -28,7 +28,11 @@ export const utils = {
       const node: VizceralNode = {
         name: meshNode.name,
         displayName: meshNode.name.substr(meshNode.name.length - 5),
-        metadata: meshNode.stats,
+        metadata: {
+          ...meshNode.stats,
+          ip: meshNode.ip,
+          geo: meshNode.geo,
+        },
       };
       nodes.push(node);
       if (meshNode.peers) {
