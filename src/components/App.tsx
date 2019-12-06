@@ -108,6 +108,7 @@ const VizceralContainer = styled.div`
   flex: 1;
   max-height: 80%;
   padding: 0 16px;
+  padding-right: 120px;
 `;
 
 const SidePanelContainer = styled.div`
@@ -119,8 +120,9 @@ const SidePanelContainer = styled.div`
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  width: 300px;
-  border-left: 2px solid #2e2e2e;
+  width: 220px;
+  border: 2px solid #2e2e2e;
+  border-top: none;
 `;
 
 const SidePanelHeaderContainer = styled.div`
@@ -363,8 +365,7 @@ export const App: React.FC = () => {
                   objectHighlighted={(e: any) => handleNodeClick(e)}
                 />
               )}
-
-<SidePanelContainer>
+              <SidePanelContainer>
                 {selectedNode && !userOverrideNodePanel ? (
                   <NodeDetailPanelContainer>
                     <XIconContainer onClick={() => setUserOverrideNodePanel(true)}>
