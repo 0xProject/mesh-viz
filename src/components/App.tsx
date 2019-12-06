@@ -1,5 +1,6 @@
+import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { Flex } from 'rebass';
+import { Box, Flex, Text } from 'rebass';
 import styled from 'styled-components';
 
 import { backendClient } from '../backend_client';
@@ -10,13 +11,12 @@ import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { ReactComponent as XIconSvg } from '../svgs/x.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
-import { useOrderWatcher } from '../use_order_watcher';
-
 import { Card } from './Card';
 import { Footer } from './Footer';
-import { LineGraphWithTooltip } from './LineGraph';
 import { Navigation } from './Navigation';
 import { Vizceral } from './Vizceral';
+import { useOrderWatcher } from '../use_order_watcher';
+import { utils } from '../utils';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -254,6 +254,13 @@ const XIconContainer = styled.div`
   cursor: pointer;
 `;
 
+const TokenIcon = styled.img`
+  height: 24px;
+  & + & {
+    margin-left: 5px;
+  }
+`;
+
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined);
@@ -297,7 +304,6 @@ export const App: React.FC = () => {
   }
 
   const { filledOrders, allOrders } = useOrderWatcher();
-  // TODO: use allOrders
 
   return (
     <AppContainer>
@@ -323,8 +329,36 @@ export const App: React.FC = () => {
             {/* events here... */}
           </Card>
 
-          <Card maxHeight={400} overflowY={'auto'} title="new orders">
-            {/* events here... */}
+          <Card height={400} overflowY={'auto'} title="new orders">
+            <Box margin={10}>
+              {allOrders.slice(0, 7).map(order => (
+                <Flex key={order.orderHash} flexDirection="row" alignItems="center">
+                  <Flex flexDirection="row" padding={10}>
+                    <TokenIcon
+                      src={utils.getTokenIconPath(order.makerAsset.tokenSymbol)}
+                      onError={(ev: any) => {
+                        ev.target.src = utils.getTokenIconPath('fallback');
+                      }}
+                    />
+                    <TokenIcon
+                      src={utils.getTokenIconPath(order.takerAsset.tokenSymbol)}
+                      onError={(ev: any) => {
+                        ev.target.src = utils.getTokenIconPath('fallback');
+                      }}
+                    />
+                  </Flex>
+                  <Box>
+                    <Text
+                      color={colors.whiteText}
+                    >{`${order.makerAsset.amount} ${order.makerAsset.tokenSymbol} for ${order.takerAsset.amount} ${order.takerAsset.tokenSymbol}`}</Text>
+
+                    <Text marginTop="5px" color={colors.secondaryText}>
+                      {format(order.time, 'dd/MM h:mm:ss')}
+                    </Text>
+                  </Box>
+                </Flex>
+              ))}
+            </Box>
           </Card>
 
           <Card maxHeight={400} overflowY={'auto'} title="recent completed trades" subtitle="last 24 hours">
@@ -343,7 +377,7 @@ export const App: React.FC = () => {
                     <TableDataItem>
                       {trade.takerAsset.amount} {trade.takerAsset.tokenSymbol}
                     </TableDataItem>
-                    <TableDataItem>{`${trade.time.getHours()}:${trade.time.getMinutes()}`}</TableDataItem>
+                    <TableDataItem>{format(trade.time, 'h:mm:ss')}</TableDataItem>
                   </RecentTrandeTableDataRow>
                 );
               })}

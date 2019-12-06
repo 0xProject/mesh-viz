@@ -20,6 +20,8 @@ function memoizePromise<T extends (...args: Args) => PromiseLike<any>, Args exte
   return memorizedFunction;
 }
 
+const memoizedFetch = memoizePromise((url: string) => fetch(url).then(r => r.json()));
+
 export const utils = {
   getGraphFromMeshNodes: (meshNodes: MeshNode[]): VizceralGraph => {
     const nodes: VizceralNode[] = [];
@@ -55,7 +57,8 @@ export const utils = {
     };
   },
 
-  getEthporerInfo: memoizePromise((address: string) =>
-    fetch(`http://api.ethplorer.io/getTokenInfo/${address}?apiKey=freekey`).then(r => r.json())
-  ),
+  getTokenIconPath: (symbol: string) => `coins/${symbol.replace('WETH', 'ETH')}.png`,
+
+  getEthporerInfo: (address: string) =>
+    memoizedFetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=freekey`),
 };

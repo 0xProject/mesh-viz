@@ -23,6 +23,7 @@
     "@vx/tooltip": "^0.0.192",
     "d3-array": "^2.4.0",
     "d3-time-format": "^2.2.2",
+    "date-fns": "^2.8.1",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "ramda": "^0.26.1",
