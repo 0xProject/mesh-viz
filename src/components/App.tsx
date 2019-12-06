@@ -1,5 +1,6 @@
+import { format } from 'date-fns';
 import React, { useEffect, useState } from 'react';
-import { Flex } from 'rebass';
+import { Box, Flex, Text } from 'rebass';
 import styled from 'styled-components';
 
 import { backendClient } from '../backend_client';
@@ -10,13 +11,12 @@ import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { ReactComponent as XIconSvg } from '../svgs/x.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
-
 import { Card } from './Card';
 import { Footer } from './Footer';
-import { LineGraphWithTooltip } from './LineGraph';
 import { Navigation } from './Navigation';
 import { Vizceral } from './Vizceral';
 import { useOrderWatcher } from '../use_order_watcher';
+import { utils } from '../utils';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -58,7 +58,7 @@ const GraphContainer = styled.div`
 
 const GraphHeaderContainer = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 100px;
   flex-direction: row;
   color: #fff;
@@ -69,11 +69,44 @@ const GraphHeaderContainer = styled.div`
   padding-left: 20px;
 `;
 
+const GraphHeaderMetricsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
+const GraphHeaderStatusContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 24px;
+`;
+
+const StatusCircle = styled.div`
+  background-color: ${colors.zeroExGreen};
+  border-radius: 100%;
+  height: 16px;
+  width: 16px;
+  margin-right: 12px;
+`;
+
+const StatusLabel = styled.div`
+  font-size: 16px;
+  color: ${colors.whiteText};
+`;
+
+const HeaderVerticalDivider = styled.div`
+  height: 100%;
+  width: 2px;
+  background-color: #2b2b2b;
+  margin-right: 24px;
+`;
+
 const GraphHeaderMetricContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
   flex-direction: row;
+  margin-bottom: 8px;
+  margin-right: 24px;
 `;
 
 const GraphHeaderMetricLabel = styled.div`
@@ -97,24 +130,32 @@ const MainGraphPanelContainer = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
+  position: relative;
 `;
 
 // todo(jj) Figure out how to do container ratio better w/out max height ?
 // works for now...
 const VizceralContainer = styled.div`
+  position: relative;
   display: flex;
   flex: 1;
   max-height: 80%;
   padding: 0 16px;
+  padding-right: 120px;
 `;
 
 const SidePanelContainer = styled.div`
+  background-color: #000;
+  opacity: 0.8;
+  position: absolute;
+  top: 0;
+  right: 0;
   display: flex;
-  position: relative;
   flex-direction: column;
   overflow-y: auto;
-  flex-basis: 300px;
-  border-left: 2px solid #2e2e2e;
+  width: 220px;
+  border: 2px solid #2e2e2e;
+  border-top: none;
 `;
 
 const SidePanelHeaderContainer = styled.div`
@@ -213,6 +254,13 @@ const XIconContainer = styled.div`
   cursor: pointer;
 `;
 
+const TokenIcon = styled.img`
+  height: 24px;
+  & + & {
+    margin-left: 5px;
+  }
+`;
+
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined);
@@ -256,16 +304,14 @@ export const App: React.FC = () => {
   }
 
   const { filledOrders, allOrders } = useOrderWatcher();
-  // TODO: use allOrders
 
   return (
     <AppContainer>
       <Navigation />
       <Main>
         <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
-          <Card title="trades" subtitle="last 24 hours">
+          {/* <Card title="trades" subtitle="last 24 hours">
             <LineGraphContainer>
-              {/* TODO calculate width height w/ js */}
               <LineGraphWithTooltip
                 width={370}
                 height={200}
@@ -277,8 +323,45 @@ export const App: React.FC = () => {
                 }}
               />
             </LineGraphContainer>
+          </Card> */}
+
+          <Card maxHeight={400} overflowY={'auto'} title="mesh event stream">
+            {/* events here... */}
           </Card>
-          <Card maxHeight={400} overflowY={'auto'} title="recent trades" subtitle="last 24 hours">
+
+          <Card height={400} overflowY={'auto'} title="new orders">
+            <Box margin={10}>
+              {allOrders.slice(0, 7).map(order => (
+                <Flex key={order.orderHash} flexDirection="row" alignItems="center">
+                  <Flex flexDirection="row" padding={10}>
+                    <TokenIcon
+                      src={utils.getTokenIconPath(order.makerAsset.tokenSymbol)}
+                      onError={(ev: any) => {
+                        ev.target.src = utils.getTokenIconPath('fallback');
+                      }}
+                    />
+                    <TokenIcon
+                      src={utils.getTokenIconPath(order.takerAsset.tokenSymbol)}
+                      onError={(ev: any) => {
+                        ev.target.src = utils.getTokenIconPath('fallback');
+                      }}
+                    />
+                  </Flex>
+                  <Box>
+                    <Text
+                      color={colors.whiteText}
+                    >{`${order.makerAsset.amount} ${order.makerAsset.tokenSymbol} for ${order.takerAsset.amount} ${order.takerAsset.tokenSymbol}`}</Text>
+
+                    <Text marginTop="5px" color={colors.secondaryText}>
+                      {format(order.time, 'dd/MM h:mm:ss')}
+                    </Text>
+                  </Box>
+                </Flex>
+              ))}
+            </Box>
+          </Card>
+
+          <Card maxHeight={400} overflowY={'auto'} title="recent completed trades" subtitle="last 24 hours">
             <RecentTradeTable>
               <RecentTradeTableHeaderRow>
                 <TableHeaderItem>Maker</TableHeaderItem>
@@ -294,15 +377,14 @@ export const App: React.FC = () => {
                     <TableDataItem>
                       {trade.takerAsset.amount} {trade.takerAsset.tokenSymbol}
                     </TableDataItem>
-                    <TableDataItem>{`${trade.time.getHours()}:${trade.time.getMinutes()}`}</TableDataItem>
+                    <TableDataItem>{format(trade.time, 'h:mm:ss')}</TableDataItem>
                   </RecentTrandeTableDataRow>
                 );
               })}
             </RecentTradeTable>
           </Card>
-          <Card title="volume" subtitle="last 24 hours">
+          {/* <Card title="volume" subtitle="last 24 hours">
             <LineGraphContainer>
-              {/* TODO calculate width height w/ js */}
               <LineGraphWithTooltip
                 width={370}
                 height={200}
@@ -314,38 +396,44 @@ export const App: React.FC = () => {
                 }}
               />
             </LineGraphContainer>
-          </Card>
+          </Card> */}
         </Flex>
         <GraphContainer>
           <MainGraphPanelContainer>
             <GraphHeaderContainer>
-              <GraphHeaderMetricContainer>
-                <ActiveNodesSvg fill="#fff" width={40} height={40} />
-                <HeaderMetricDataContainer>
-                  <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
-                  <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
-                </HeaderMetricDataContainer>
-              </GraphHeaderMetricContainer>
-              {/* <HeaderVerticalDivider /> */}
-              <GraphHeaderMetricContainer>
-                <ConnectionsSvg fill={'#fff'} width={40} height={40} />
-                <HeaderMetricDataContainer>
-                  <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
-                  <GraphHeaderMetricValue>
-                    {connectionCount ? connectionCount.toLocaleString() : '-'}
-                  </GraphHeaderMetricValue>
-                </HeaderMetricDataContainer>
-              </GraphHeaderMetricContainer>
-              {/* <HeaderVerticalDivider /> */}
-              <GraphHeaderMetricContainer>
-                <OrderbookSvg fill="#fff" width={40} height={40} />
-                <HeaderMetricDataContainer>
-                  <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
-                  <GraphHeaderMetricValue>
-                    {openOrderCount ? openOrderCount.toLocaleString() : '-'}
-                  </GraphHeaderMetricValue>
-                </HeaderMetricDataContainer>
-              </GraphHeaderMetricContainer>
+              <GraphHeaderMetricsContainer>
+                <GraphHeaderMetricContainer>
+                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+                <HeaderVerticalDivider />
+                <GraphHeaderMetricContainer>
+                  <ConnectionsSvg fill={'#fff'} width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>
+                      {connectionCount ? connectionCount.toLocaleString() : '-'}
+                    </GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+                <HeaderVerticalDivider />
+                <GraphHeaderMetricContainer>
+                  <OrderbookSvg fill="#fff" width={40} height={40} />
+                  <HeaderMetricDataContainer>
+                    <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
+                    <GraphHeaderMetricValue>
+                      {openOrderCount ? openOrderCount.toLocaleString() : '-'}
+                    </GraphHeaderMetricValue>
+                  </HeaderMetricDataContainer>
+                </GraphHeaderMetricContainer>
+              </GraphHeaderMetricsContainer>
+              <GraphHeaderStatusContainer>
+                <StatusCircle />
+                <StatusLabel>All systems operational</StatusLabel>
+              </GraphHeaderStatusContainer>
             </GraphHeaderContainer>
             <VizceralContainer>
               {traffic.nodes.length > 0 && (
@@ -357,43 +445,36 @@ export const App: React.FC = () => {
                   objectHighlighted={(e: any) => handleNodeClick(e)}
                 />
               )}
+              <SidePanelContainer>
+                {selectedNode && !userOverrideNodePanel ? (
+                  <NodeDetailPanelContainer>
+                    <XIconContainer onClick={() => setUserOverrideNodePanel(true)}>
+                      <XIconSvg />
+                    </XIconContainer>
+                    <NodeDetailPanelTitle>Node {selectedNode.displayName || selectedNodeId}</NodeDetailPanelTitle>
+                    {selectedNode.metadata && (
+                      <>
+                        <NodeDetailLabel>order count</NodeDetailLabel>
+                        <NodeDetailValue>{selectedNode.metadata.numOrders_number || 'n/a'}</NodeDetailValue>
+                        <NodeDetailLabel>peer count</NodeDetailLabel>
+                        <NodeDetailValue>{selectedNode.metadata.numPeers_number || 'n/a'}</NodeDetailValue>
+                        <NodeDetailLabel>ip</NodeDetailLabel>
+                        <NodeDetailValue>{selectedNode.metadata.ip || 'n/a'}</NodeDetailValue>
+                        <NodeDetailLabel>location</NodeDetailLabel>
+                        <NodeDetailValue>
+                          {selectedNode.metadata.geo.city
+                            ? `${selectedNode.metadata.geo.city}, ${selectedNode.metadata.geo.country}`
+                            : selectedNode.metadata.geo.country
+                            ? selectedNode.metadata.geo.country
+                            : 'N/A'}
+                        </NodeDetailValue>
+                      </>
+                    )}
+                  </NodeDetailPanelContainer>
+                ) : null}
+              </SidePanelContainer>
             </VizceralContainer>
           </MainGraphPanelContainer>
-          <SidePanelContainer>
-            {selectedNode && !userOverrideNodePanel ? (
-              <NodeDetailPanelContainer>
-                <XIconContainer onClick={() => setUserOverrideNodePanel(true)}>
-                  <XIconSvg />
-                </XIconContainer>
-                <NodeDetailPanelTitle>Node {selectedNode.displayName || selectedNodeId}</NodeDetailPanelTitle>
-                {selectedNode.metadata && (
-                  <>
-                    <NodeDetailLabel>order count</NodeDetailLabel>
-                    <NodeDetailValue>{selectedNode.metadata.numOrders_number || 'n/a'}</NodeDetailValue>
-                    <NodeDetailLabel>peer count</NodeDetailLabel>
-                    <NodeDetailValue>{selectedNode.metadata.numPeers_number || 'n/a'}</NodeDetailValue>
-                    <NodeDetailLabel>ip</NodeDetailLabel>
-                    <NodeDetailValue>{selectedNode.metadata.ip || 'n/a'}</NodeDetailValue>
-                    <NodeDetailLabel>location</NodeDetailLabel>
-                    <NodeDetailValue>
-                      {selectedNode.metadata.geo.city
-                        ? `${selectedNode.metadata.geo.city}, ${selectedNode.metadata.geo.country}`
-                        : selectedNode.metadata.geo.country
-                        ? selectedNode.metadata.geo.country
-                        : 'N/A'}
-                    </NodeDetailValue>
-                  </>
-                )}
-              </NodeDetailPanelContainer>
-            ) : (
-              <>
-                <SidePanelHeaderContainer>
-                  <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
-                  <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
-                </SidePanelHeaderContainer>
-              </>
-            )}
-          </SidePanelContainer>
         </GraphContainer>
       </Main>
       <Footer />
