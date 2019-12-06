@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import { backendClient } from '../backend_client';
 import { logger } from '../logger';
 import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
+import { ReactComponent as ConnectionsSvg } from '../svgs/modeling.svg';
+import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
 
@@ -59,18 +61,18 @@ const GraphHeaderContainer = styled.div`
   justify-content: space-around;
   height: 100px;
   flex-direction: row;
+  color: #fff;
   width: 100%;
-  border-bottom: 3px solid #2e2e2e;
+  border-bottom: 2px solid #2e2e2e;
   padding-top: 20px;
   padding-bottom: 8px;
-  color: #fff;
   padding-left: 20px;
 `;
 
 const GraphHeaderMetricContainer = styled.div`
   display: flex;
   align-items: center;
-  padding-bottom: 8px;
+  margin-bottom: 8px;
   flex-direction: row;
 `;
 
@@ -103,18 +105,27 @@ const VizceralContainer = styled.div`
   display: flex;
   flex: 1;
   max-height: 80%;
+  padding: 0 16px;
 `;
 
 const SidePanelContainer = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   overflow-y: auto;
   flex-basis: 300px;
+  border-left: 2px solid #2e2e2e;
 `;
 
-const SidePanelHeaderContainr = styled.div`
+const SidePanelHeaderContainer = styled.div`
   display: flex;
   height: 100px;
+  border-bottom: 2px solid #2e2e2e;
+  flex-direction: row;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const LineGraphContainer = styled.div`
@@ -122,8 +133,33 @@ const LineGraphContainer = styled.div`
   justify-content: center;
 `;
 
+const SidePanelHeaderLabel = styled.div`
+  font-size: 24px;
+  color: ${colors.whiteText};
+`;
+
+const SidePanelHeaderSecondaryLabel = styled.div`
+  font-size: 24px;
+  cursor: pointer;
+  color: ${colors.secondaryText};
+  transition: 0.2s color;
+  :hover {
+    color: ${colors.zeroExGreen};
+  }
+`;
+
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
+  const [selectedNode, setSelectedNode] = useState<any /* need type? */ | undefined>(undefined);
+
+  const handleNodeClick = (clickNodeEvent: any | undefined) => {
+    if (!clickNodeEvent) {
+      // Implies a blur
+      return setSelectedNode(undefined);
+    }
+    setSelectedNode(clickNodeEvent.name);
+  };
+
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
   useEffect(() => {
     const fetchAndSetTrafficAsync = async () => {
@@ -201,7 +237,7 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
                 {/* <HeaderVerticalDivider /> */}
                 <GraphHeaderMetricContainer>
-                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
+                  <ConnectionsSvg fill={'#fff'} width={40} height={40} />
                   <HeaderMetricDataContainer>
                     <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
                     <GraphHeaderMetricValue>
@@ -211,7 +247,7 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
                 {/* <HeaderVerticalDivider /> */}
                 <GraphHeaderMetricContainer>
-                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
+                  <OrderbookSvg fill="#fff" width={40} height={40} />
                   <HeaderMetricDataContainer>
                     <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
                     <GraphHeaderMetricValue>
@@ -221,22 +257,30 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
               </GraphHeaderContainer>
               <VizceralContainer>
-                {traffic.nodes.length > 0 &&
+                {traffic.nodes.length > 0 && (
                   // Hack updating traffic does not work at the moment
                   <Vizceral
                     traffic={traffic}
                     viewChanged={logger.bind(logger, 'viewChanged')}
                     viewUpdated={logger.bind(logger, 'viewUpdated')}
-                    objectHighlighted={logger.bind(logger, 'objectHighlighted')}
+                    objectHighlighted={(e: any) => handleNodeClick(e)}
                   />
-                }
+                )}
               </VizceralContainer>
             </MainGraphPanelContainer>
             <SidePanelContainer>
-              <SidePanelHeaderContainr>12234</SidePanelHeaderContainr>
+              {selectedNode ? (
+                <div>hello</div>
+              ) : (
+                <>
+                  <SidePanelHeaderContainer>
+                    <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
+                    <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
+                  </SidePanelHeaderContainer>
+                </>
+              )}
             </SidePanelContainer>
           </GraphContainer>
-          {/* </Flex> */}
         </Main>
         <Footer />
       </AppContainer>
