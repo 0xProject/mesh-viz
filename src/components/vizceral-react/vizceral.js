@@ -92,7 +92,7 @@ class Vizceral extends React.Component {
     }, 0);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (!isEqual(nextProps.styles, this.props.styles)) {
       this.updateStyles(nextProps.styles);
     }
