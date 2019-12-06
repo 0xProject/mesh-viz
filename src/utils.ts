@@ -4,7 +4,7 @@ import { MeshNode, VizceralConnection, VizceralGraph, VizceralNode } from './typ
 
 function memoizePromise<T extends (...args: Args) => PromiseLike<any>, Args extends any[]>(
   f: T,
-  resolver: (...args: Args) => any = ((a: any) => a) as any,
+  resolver: (...args: Args) => any = ((a: any) => a) as any
 ) {
   const memorizedFunction = memoize(
     (async function(...args: Args) {
@@ -15,7 +15,7 @@ function memoizePromise<T extends (...args: Args) => PromiseLike<any>, Args exte
         throw e;
       }
     } as any) as T,
-    resolver,
+    resolver
   );
   return memorizedFunction;
 }
@@ -63,7 +63,7 @@ export const utils = {
     const truncated = `${str.substring(0, numStartChars)}...${str.substr(-numEndChars)}`;
     return truncated;
   },
-  getTokenIconPath: (symbol: string) => `coins/${symbol.replace('WETH', 'ETH')}.png`,
+  getTokenIconPath: (symbol: string) => `coins/${symbol.replace('WETH', 'ETH').toLowerCase()}.png`,
   getEthporerInfo: (address: string) =>
     memoizedFetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=freekey`),
 
