@@ -63,4 +63,6 @@ export const utils = {
   getTokenIconPath: (symbol: string) => `coins/${symbol.replace('WETH', 'ETH')}.png`,
   getEthporerInfo: (address: string) =>
     memoizedFetch(`https://api.ethplorer.io/getTokenInfo/${address}?apiKey=freekey`),
+
+  getHistoricalFills: () => memoizedFetch('https://api.0xtracker.com/fills?page=1&limit=50').then(r => r.fills),
 };
