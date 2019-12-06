@@ -5,5 +5,6 @@ import { App } from './components/App';
 import './resets.css';
 // tslint:disable-next-line: ordered-imports
 import './index.css';
+import './vizceral.css';
 
 ReactDOM.render(<App />, document.getElementById('root'));

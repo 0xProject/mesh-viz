@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "@0x/tslint-config": "^4.0.0",
+    "@types/lodash": "^4.14.149",
     "@types/ramda": "^0.26.36",
     "@types/rebass": "^4.0.3",
     "@types/styled-components": "^4.4.0",
