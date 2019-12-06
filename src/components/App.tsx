@@ -230,7 +230,6 @@ export const App: React.FC = () => {
 
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
   const [selectedNode] = selectedNodeId ? traffic.nodes.filter(x => x.name === selectedNodeId) : [];
-  console.log(selectedNode);
 
   useEffect(() => {
     const fetchAndSetTrafficAsync = async () => {
