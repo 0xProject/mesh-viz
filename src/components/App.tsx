@@ -21,6 +21,7 @@ import { Card } from './Card';
 import { Footer } from './Footer';
 import { Navigation } from './Navigation';
 import { Vizceral } from './Vizceral';
+import { BarChart } from './BarGraph';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -302,10 +303,70 @@ export const App: React.FC = () => {
 
   let connectionCount;
   let activeNodes;
+  let distribution: Array<any> = [];
   if (traffic && traffic.nodes.length) {
     connectionCount = traffic.connections.length;
     activeNodes = traffic.nodes.length;
+    // console.log(traffic.connections);
+    // console.log(traffic);
+
+    const nodeConnectionCountMap = traffic.connections.reduce((accum, curConnection) => {
+      if (accum[curConnection.source]) {
+        accum[curConnection.source] += 1;
+      } else {
+        accum[curConnection.source] = 1;
+      }
+      return accum;
+    }, {} as any);
+
+     distribution = Object.keys(nodeConnectionCountMap).reduce((accum, key) => {
+      const nodeId = key;
+      const nodeConnectionCount = nodeConnectionCountMap[nodeId];
+      
+
+
+      const idx = accum.findIndex(x => x.connectionCount === nodeConnectionCount);
+
+
+      if (idx > -1) {
+        const cur = accum[idx];
+        cur.totalNodes += 1;
+      } else {
+        accum.push({
+          connectionCount: nodeConnectionCount,
+          totalNodes: 1,
+        });
+      }
+      return accum;
+    }, [] as Array<any>);
+
+
+    distribution.sort((a,b) => a.connectionCount - b.connectionCount);
+
+    // distribution = traffic.nodes.reduce((accum: Array<any>, curNode) => {
+    //   // console.log(curNode);
+    //   let numOfNodesConnectedToCurNode = undefined;;
+    //   // if (curNode.metadata) {
+
+    //   // }
+    //   if (curNode.nodes) {
+    //     numOfNodesConnectedToCurNode = curNode.nodes.length;
+    //   }
+
+    //   if (numOfNodesConnectedToCurNode !== undefined) {
+    //     if (accum[numOfNodesConnectedToCurNode]) {
+    //       accum[numOfNodesConnectedToCurNode] = accum[numOfNodesConnectedToCurNode] + 1;
+    //     } else {
+    //       accum[numOfNodesConnectedToCurNode] = 1;
+    //     }
+    //   }
+
+    //   return accum;
+    // }, []);
   }
+
+  console.log(distribution);
+
 
   const { filledOrders, addedOrders } = useOrderWatcher();
 
@@ -313,21 +374,18 @@ export const App: React.FC = () => {
     <AppContainer>
       <Navigation />
       <Main>
-        <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
-          {/* <Card title="trades" subtitle="last 24 hours">
+        <Flex maxHeight={'100%'} overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
+          <Card maxHeight={240} title="node connection distribution" overflowY={'scroll'} >
+          
             <LineGraphContainer>
-              <LineGraphWithTooltip
+              {distribution.length > 0 && <BarChart
+              data={distribution}
                 width={370}
                 height={200}
-                margin={{
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  bottom: 0,
-                }}
               />
-            </LineGraphContainer>
-          </Card> */}
+}
+              </LineGraphContainer>
+          </Card>
 
           <Card maxHeight={400} overflowY={'auto'} title="mesh event stream">
             {/* events here... */}
