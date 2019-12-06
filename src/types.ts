@@ -1,3 +1,7 @@
+export interface VizceralNotices {
+  severity?: number;
+  title: string;
+}
 export interface VizceralNode {
   name: string;
   nodes?: VizceralNode[];
@@ -5,14 +9,14 @@ export interface VizceralNode {
   metadata?: { [key: string]: any };
   // The class of the node. will default to 'normal' if not provided. The coloring of the UI is based on 'normal', 'warning', and 'danger', so if you want to match the UI coloring, use those class names. Any class you provide will expect to have a style 'colorClassName' available, e.g. if the class is 'fuzzy', you should also call 'vizceral.updateStyles({ colorTraffic: { fuzzy: '#aaaaaa' } })'
   class?: string;
+  notices?: VizceralNotices[];
 }
 
 export interface VizceralConnection {
   source: string;
   target: string;
   metrics?: { [key: string]: number };
-  // Show on hover
-  notices?: any[];
+  notices?: VizceralNotices[];
   metadata?: { [key: string]: any };
 }
 
