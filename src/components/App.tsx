@@ -11,11 +11,10 @@ import { VizceralTraffic } from '../types';
 
 import { Card } from './Card';
 import { Footer } from './Footer';
+import { LineGraphWithTooltip } from './LineGraph';
 import { Navigation } from './Navigation';
 import Vizceral from './vizceral-react/vizceral';
 import './vizceral-react/vizceral.css';
-
-import { LineGraphWithTooltip } from './LineGraph';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -264,7 +263,7 @@ export const App: React.FC = () => {
               hello
             </Card>
             <Card title="volume" subtitle={'last 24 hours'}>
-            <LineGraphContainer>
+              <LineGraphContainer>
                 {/* TODO calculate width height w/ js */}
                 <LineGraphWithTooltip
                   width={370}
