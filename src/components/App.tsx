@@ -5,15 +5,17 @@ import styled from 'styled-components';
 
 import { backendClient } from '../backend_client';
 import { logger } from '../logger';
-import { VizceralTraffic } from '../types';
 import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
 import { colors } from '../theme';
+import { VizceralTraffic } from '../types';
 
 import { Card } from './Card';
 import { Footer } from './Footer';
 import { Navigation } from './Navigation';
 import Vizceral from './vizceral-react/vizceral';
 import './vizceral-react/vizceral.css';
+
+import { LineGraphWithTooltip } from './LineGraph';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')
@@ -218,6 +220,11 @@ const HeaderVerticalDivider = styled.div`
   height: 100%;
 `;
 
+const LineGraphContainer = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
 export const App: React.FC = () => {
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
   useEffect(() => {
@@ -239,13 +246,37 @@ export const App: React.FC = () => {
         <Main>
           <Flex style={{ flexBasis: 370 }} flexDirection={'column'}>
             <Card title="trades" subtitle={'last 24 hours'}>
-              hello
+              <LineGraphContainer>
+                {/* TODO calculate width height w/ js */}
+                <LineGraphWithTooltip
+                  width={370}
+                  height={200}
+                  margin={{
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                  }}
+                />
+              </LineGraphContainer>
             </Card>
             <Card title="recent trades" subtitle={'last 24 hours'}>
               hello
             </Card>
             <Card title="volume" subtitle={'last 24 hours'}>
-              hello
+            <LineGraphContainer>
+                {/* TODO calculate width height w/ js */}
+                <LineGraphWithTooltip
+                  width={370}
+                  height={200}
+                  margin={{
+                    left: 0,
+                    right: 0,
+                    top: 0,
+                    bottom: 0,
+                  }}
+                />
+              </LineGraphContainer>
             </Card>
           </Flex>
           <GraphContainer>
@@ -258,9 +289,9 @@ export const App: React.FC = () => {
                     <GraphHeaderMetricValue>12346</GraphHeaderMetricValue>
                   </HeaderMetricDataContainer>
                 </GraphHeaderMetricContainer>
-                <HeaderVerticalDivider/>
+                <HeaderVerticalDivider />
                 <GraphHeaderMetricContainer>2</GraphHeaderMetricContainer>
-                <HeaderVerticalDivider/>
+                <HeaderVerticalDivider />
 
                 <GraphHeaderMetricContainer>3</GraphHeaderMetricContainer>
               </GraphHeaderContainer>
