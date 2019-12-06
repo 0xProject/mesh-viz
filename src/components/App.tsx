@@ -147,6 +147,39 @@ const SidePanelHeaderSecondaryLabel = styled.div`
   }
 `;
 
+const RecentTradeTable = styled.table`
+  width: calc(100% - 32px);
+  color: #fff;
+  margin: 10px 16px;
+  box-sizing: border-box;
+  max-height: 400px;
+  overflow-y: auto;
+`;
+
+const RecentTradeTableHeaderRow = styled.tr`
+  border-bottom: 2px solid #2e2e2e;
+`;
+
+const RecentTrandeTableDataRow = styled.tr`
+  margin-bottom: 8px;
+  margin-top: 8px;
+`;
+
+const TableHeaderItem = styled.th`
+  padding-top: 8px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  height: 30px;
+  padding: 10px;
+`;
+
+const TableDataItem = styled.td`
+  margin-bottom: 8px;
+  margin-top: 8px;
+  height: 30px;
+  padding-top: 10px;
+`;
+
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined);
@@ -185,106 +218,145 @@ export const App: React.FC = () => {
     connectionCount = traffic.connections.length;
     activeNodes = traffic.nodes.length;
   }
+
+  const recentTradeData = [
+    {
+      maker: 'ZRX',
+      makerAmount: 1000.1,
+      taker: 'DAI',
+      takerAmount: 56.32,
+      poolName: 'CoolPool',
+      time: '9:50:15',
+      id: '1',
+    },
+    {
+      maker: 'ZRX',
+      makerAmount: 1000.1,
+      taker: 'DAI',
+      takerAmount: 56.32,
+      poolName: 'CoolPool',
+      time: '9:50:15',
+      id: '2',
+    },
+  ];
   return (
-    <>
-      <BaseStyles />
-      <AppContainer>
-        <Navigation />
-        <Main>
-          <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
-            <Card title="trades" subtitle="last 24 hours">
-              <LineGraphContainer>
-                {/* TODO calculate width height w/ js */}
-                <LineGraphWithTooltip
-                  width={370}
-                  height={200}
-                  margin={{
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                  }}
+    <AppContainer>
+      <Navigation />
+      <Main>
+        <Flex overflowY={'auto'} style={{ flexBasis: 370 }} flexDirection={'column'}>
+          <Card title="trades" subtitle="last 24 hours">
+            <LineGraphContainer>
+              {/* TODO calculate width height w/ js */}
+              <LineGraphWithTooltip
+                width={370}
+                height={200}
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+              />
+            </LineGraphContainer>
+          </Card>
+          <Card maxHeight={400} overflowY={'auto'} title="recent trades" subtitle="last 24 hours">
+            <RecentTradeTable>
+              <RecentTradeTableHeaderRow>
+                <TableHeaderItem>Maker</TableHeaderItem>
+                <TableHeaderItem>Taker</TableHeaderItem>
+                <TableHeaderItem>Pool</TableHeaderItem>
+                <TableHeaderItem>Time</TableHeaderItem>
+              </RecentTradeTableHeaderRow>
+              {recentTradeData.map(trade => {
+                return (
+                  <RecentTrandeTableDataRow key={trade.id}>
+                    <TableDataItem>
+                      {trade.makerAmount} {trade.maker}
+                    </TableDataItem>
+                    <TableDataItem>
+                      {trade.takerAmount} {trade.taker}
+                    </TableDataItem>
+                    <TableDataItem>{trade.poolName || 'none'}</TableDataItem>
+                    <TableDataItem>{trade.time}</TableDataItem>
+                  </RecentTrandeTableDataRow>
+                );
+              })}
+            </RecentTradeTable>
+          </Card>
+          <Card title="volume" subtitle="last 24 hours">
+            <LineGraphContainer>
+              {/* TODO calculate width height w/ js */}
+              <LineGraphWithTooltip
+                width={370}
+                height={200}
+                margin={{
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                }}
+              />
+            </LineGraphContainer>
+          </Card>
+        </Flex>
+        <GraphContainer>
+          <MainGraphPanelContainer>
+            <GraphHeaderContainer>
+              <GraphHeaderMetricContainer>
+                <ActiveNodesSvg fill="#fff" width={40} height={40} />
+                <HeaderMetricDataContainer>
+                  <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
+                  <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
+                </HeaderMetricDataContainer>
+              </GraphHeaderMetricContainer>
+              {/* <HeaderVerticalDivider /> */}
+              <GraphHeaderMetricContainer>
+                <ConnectionsSvg fill={'#fff'} width={40} height={40} />
+                <HeaderMetricDataContainer>
+                  <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
+                  <GraphHeaderMetricValue>
+                    {connectionCount ? connectionCount.toLocaleString() : '-'}
+                  </GraphHeaderMetricValue>
+                </HeaderMetricDataContainer>
+              </GraphHeaderMetricContainer>
+              {/* <HeaderVerticalDivider /> */}
+              <GraphHeaderMetricContainer>
+                <OrderbookSvg fill="#fff" width={40} height={40} />
+                <HeaderMetricDataContainer>
+                  <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
+                  <GraphHeaderMetricValue>
+                    {openOrderCount ? openOrderCount.toLocaleString() : '-'}
+                  </GraphHeaderMetricValue>
+                </HeaderMetricDataContainer>
+              </GraphHeaderMetricContainer>
+            </GraphHeaderContainer>
+            <VizceralContainer>
+              {traffic.nodes.length > 0 && (
+                // Hack updating traffic does not work at the moment
+                <Vizceral
+                  traffic={traffic}
+                  viewChanged={logger.bind(logger, 'viewChanged')}
+                  viewUpdated={logger.bind(logger, 'viewUpdated')}
+                  objectHighlighted={(e: any) => handleNodeClick(e)}
                 />
-              </LineGraphContainer>
-            </Card>
-            <Card title="recent trades" subtitle="last 24 hours">
-              hello
-            </Card>
-            <Card title="volume" subtitle="last 24 hours">
-              <LineGraphContainer>
-                {/* TODO calculate width height w/ js */}
-                <LineGraphWithTooltip
-                  width={370}
-                  height={200}
-                  margin={{
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    bottom: 0,
-                  }}
-                />
-              </LineGraphContainer>
-            </Card>
-          </Flex>
-          <GraphContainer>
-            <MainGraphPanelContainer>
-              <GraphHeaderContainer>
-                <GraphHeaderMetricContainer>
-                  <ActiveNodesSvg fill="#fff" width={40} height={40} />
-                  <HeaderMetricDataContainer>
-                    <GraphHeaderMetricLabel>active nodes</GraphHeaderMetricLabel>
-                    <GraphHeaderMetricValue>{activeNodes ? activeNodes.toLocaleString() : '-'}</GraphHeaderMetricValue>
-                  </HeaderMetricDataContainer>
-                </GraphHeaderMetricContainer>
-                {/* <HeaderVerticalDivider /> */}
-                <GraphHeaderMetricContainer>
-                  <ConnectionsSvg fill={'#fff'} width={40} height={40} />
-                  <HeaderMetricDataContainer>
-                    <GraphHeaderMetricLabel>connections</GraphHeaderMetricLabel>
-                    <GraphHeaderMetricValue>
-                      {connectionCount ? connectionCount.toLocaleString() : '-'}
-                    </GraphHeaderMetricValue>
-                  </HeaderMetricDataContainer>
-                </GraphHeaderMetricContainer>
-                {/* <HeaderVerticalDivider /> */}
-                <GraphHeaderMetricContainer>
-                  <OrderbookSvg fill="#fff" width={40} height={40} />
-                  <HeaderMetricDataContainer>
-                    <GraphHeaderMetricLabel>open orders</GraphHeaderMetricLabel>
-                    <GraphHeaderMetricValue>
-                      {openOrderCount ? openOrderCount.toLocaleString() : '-'}
-                    </GraphHeaderMetricValue>
-                  </HeaderMetricDataContainer>
-                </GraphHeaderMetricContainer>
-              </GraphHeaderContainer>
-              <VizceralContainer>
-                {traffic.nodes.length > 0 && (
-                  // Hack updating traffic does not work at the moment
-                  <Vizceral
-                    traffic={traffic}
-                    viewChanged={logger.bind(logger, 'viewChanged')}
-                    viewUpdated={logger.bind(logger, 'viewUpdated')}
-                    objectHighlighted={(e: any) => handleNodeClick(e)}
-                  />
-                )}
-              </VizceralContainer>
-            </MainGraphPanelContainer>
-            <SidePanelContainer>
-              {selectedNode ? (
-                <div>hello</div>
-              ) : (
-                <>
-                  <SidePanelHeaderContainer>
-                    <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
-                    <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
-                  </SidePanelHeaderContainer>
-                </>
               )}
-            </SidePanelContainer>
-          </GraphContainer>
-        </Main>
-        <Footer />
-      </AppContainer>
-    </>
+            </VizceralContainer>
+          </MainGraphPanelContainer>
+          <SidePanelContainer>
+            {selectedNode ? (
+              <div>hello</div>
+            ) : (
+              <>
+                <SidePanelHeaderContainer>
+                  <SidePanelHeaderLabel>new orders</SidePanelHeaderLabel>
+                  <SidePanelHeaderSecondaryLabel>filters</SidePanelHeaderSecondaryLabel>
+                </SidePanelHeaderContainer>
+              </>
+            )}
+          </SidePanelContainer>
+        </GraphContainer>
+      </Main>
+      <Footer />
+    </AppContainer>
   );
 };
