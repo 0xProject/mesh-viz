@@ -494,7 +494,7 @@ export const App: React.FC = () => {
                         <NodeDetailValue>{selectedNode.metadata.ip || 'n/a'}</NodeDetailValue>
                         <NodeDetailLabel>location</NodeDetailLabel>
                         <NodeDetailValue>
-                          {selectedNode.metadata.geo.city
+                          {selectedNode?.metadata?.geo?.city
                             ? `${selectedNode.metadata.geo.city}, ${selectedNode.metadata.geo.country}`
                             : selectedNode.metadata.geo.country
                             ? selectedNode.metadata.geo.country
