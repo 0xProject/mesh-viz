@@ -159,6 +159,7 @@ const GraphContainer = styled.div`
 const GraphHeaderContainer = styled.div`
   display: flex;
   justify-content: space-around;
+  height: 100px;
   flex-direction: row;
   width: 100%;
   border-bottom: 3px solid #2e2e2e;
@@ -203,7 +204,7 @@ const MainGraphPanelContainer = styled.div`
 const VizceralContainer = styled.div`
   display: flex;
   flex: 1;
-  max-height: 80%; =
+  max-height: 80%;
 `;
 
 const SidePanelContainer = styled.div`
@@ -211,6 +212,11 @@ const SidePanelContainer = styled.div`
   flex-direction: column;
   overflow-y: auto;
   flex-basis: 300px;
+`;
+
+const SidePanelHeaderContainr = styled.div`
+  display: flex;
+  height: 100px;
 `;
 
 const HeaderVerticalDivider = styled.div`
@@ -329,7 +335,9 @@ export const App: React.FC = () => {
                 />
               </VizceralContainer>
             </MainGraphPanelContainer>
-            <SidePanelContainer>yeet</SidePanelContainer>
+            <SidePanelContainer>
+              <SidePanelHeaderContainr>12234</SidePanelHeaderContainr>
+            </SidePanelContainer>
           </GraphContainer>
           {/* </Flex> */}
         </Main>
