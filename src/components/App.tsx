@@ -285,16 +285,16 @@ export const App: React.FC = () => {
 
   useInterval(() => {
     const fetchAndSetDataAsync = async () => {
-      const [graph, v3orders, v2orders] = await Promise.all([
+      const [graph, v3orderCount, v2orderCount] = await Promise.all([
         backendClient.getVizsceralGraphAsync(),
-        sraV3Client.getOrdersAsync(),
-        sraV2Client.getOrdersAsync(),
+        sraV3Client.getOpenOrderCountAsync(),
+        sraV2Client.getOpenOrderCountAsync(),
       ]);
       setTraffic({
         ...baseTraffic,
         ...graph,
       });
-      setOpenOrderCount(v3orders.total + v2orders.total);
+      setOpenOrderCount(v3orderCount + v2orderCount);
     };
     // tslint:disable-next-line:no-floating-promises
     fetchAndSetDataAsync();
