@@ -7,8 +7,10 @@ import { useState } from 'react';
 import { logger } from '../logger';
 import { utils } from '../utils';
 
-const MESH_ENDPOINT = 'wss://mesh.api.0x.org';
-const wsClient = new WSClient(MESH_ENDPOINT);
+const MESH_ENDPOINT_V2 = 'wss://mesh.backend.sra.0x.org';
+const MESH_ENDPOINT_V3 = 'wss://mesh.api.0x.org';
+const wsClientV2 = new WSClient(MESH_ENDPOINT_V2);
+const wsClientV3 = new WSClient(MESH_ENDPOINT_V3);
 
 interface Asset {
   tokenAddress: string;
@@ -59,10 +61,16 @@ const toOrder = async (orderEvent: OrderEvent): Promise<Order | undefined> => {
   return order;
 };
 
+const sortAndDedupe = (orders: Order[]) =>
+  uniqBy(
+    orders.sort((a, b) => compareDesc(a.time, b.time)),
+    o => o.orderHash
+  );
+
 export const useOrderWatcher = () => {
-  const [allOrders, setAllOrders] = useState<Order[]>([]);
+  const [filledOrders, setFilledOrders] = useState<Order[]>([]);
+  const [addedOrders, setAddedOrders] = useState<Order[]>([]);
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
-  const appendOrders = (newOrders: Order[]) => setAllOrders(prevOrders => prevOrders.concat(newOrders));
 
   if (!isSubscribed) {
     setIsSubscribed(true);
@@ -72,22 +80,25 @@ export const useOrderWatcher = () => {
         maybeOrders.filter(o => !!o)
       )) as Order[];
 
-      appendOrders(orders.filter(o => [OrderEventEndState.Filled, OrderEventEndState.Added].includes(o.state)));
+      const newFilledOrders = orders.filter(o =>
+        [OrderEventEndState.Filled, OrderEventEndState.FullyFilled].includes(o.state)
+      );
+      const newAddedOrders = orders.filter(o => o.state === OrderEventEndState.Added);
+
+      setFilledOrders(oldFilledOrders => sortAndDedupe(oldFilledOrders.slice(0, 100).concat(newFilledOrders)));
+      setAddedOrders(oldNewOrders => sortAndDedupe(oldNewOrders.slice(0, 100).concat(newAddedOrders)));
     };
 
-    wsClient
-      .subscribeToOrdersAsync(async (orderEvents: OrderEvent[]) => {
-        await addOrders(orderEvents);
-      })
-      .catch(err => {
-        logger(err);
-      });
+    const handleErr = (err: Error) => {
+      logger(err);
+    };
+
+    wsClientV3.subscribeToOrdersAsync(addOrders).catch(handleErr);
+    wsClientV2.subscribeToOrdersAsync(addOrders).catch(handleErr);
   }
 
-  const sortedOrders = uniqBy(
-    allOrders.sort((a, b) => compareDesc(a.time, b.time)),
-    o => o.orderHash
-  );
-
-  return { filledOrders: sortedOrders.filter(o => o.state === OrderEventEndState.Filled), allOrders: sortedOrders };
+  return {
+    filledOrders,
+    addedOrders,
+  };
 };

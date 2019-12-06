@@ -307,7 +307,7 @@ export const App: React.FC = () => {
     activeNodes = traffic.nodes.length;
   }
 
-  const { filledOrders, allOrders } = useOrderWatcher();
+  const { filledOrders, addedOrders } = useOrderWatcher();
 
   return (
     <AppContainer>
@@ -335,7 +335,7 @@ export const App: React.FC = () => {
 
           <Card height={400} overflowY={'auto'} title="new orders">
             <Box margin={10}>
-              {allOrders.slice(0, 7).map(order => (
+              {addedOrders.slice(0, 7).map(order => (
                 <Flex key={order.orderHash} flexDirection="row" alignItems="center">
                   <Flex flexDirection="row" padding={10}>
                     <TokenIcon
