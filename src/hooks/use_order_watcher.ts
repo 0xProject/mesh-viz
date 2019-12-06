@@ -65,7 +65,7 @@ const toOrder = async (orderEvent: OrderEvent): Promise<Order | undefined> => {
 const sortAndDedupe = (orders: Order[]) =>
   uniqBy(
     orders.sort((a, b) => compareDesc(a.time, b.time)),
-    o => o.orderHash
+    o => o.orderHash,
   );
 
 const parseAsset = (asset: HistoricalAsset) => ({
@@ -86,11 +86,11 @@ export const useOrderWatcher = () => {
 
     const addOrders = async (orderEvents: OrderEvent[]) => {
       const orders = (await Promise.all(orderEvents.map(orderEvent => toOrder(orderEvent))).then(maybeOrders =>
-        maybeOrders.filter(o => !!o)
+        maybeOrders.filter(o => !!o),
       )) as Order[];
 
       const newFilledOrders = orders.filter(o =>
-        [OrderEventEndState.Filled, OrderEventEndState.FullyFilled].includes(o.state)
+        [OrderEventEndState.Filled, OrderEventEndState.FullyFilled].includes(o.state),
       );
       const newAddedOrders = orders.filter(o => o.state === OrderEventEndState.Added);
 

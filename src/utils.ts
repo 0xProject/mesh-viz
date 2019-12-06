@@ -4,7 +4,7 @@ import { MeshNode, VizceralConnection, VizceralGraph, VizceralNode } from './typ
 
 function memoizePromise<T extends (...args: Args) => PromiseLike<any>, Args extends any[]>(
   f: T,
-  resolver: (...args: Args) => any = ((a: any) => a) as any
+  resolver: (...args: Args) => any = ((a: any) => a) as any,
 ) {
   const memorizedFunction = memoize(
     (async function(...args: Args) {
@@ -15,7 +15,7 @@ function memoizePromise<T extends (...args: Args) => PromiseLike<any>, Args exte
         throw e;
       }
     } as any) as T,
-    resolver
+    resolver,
   );
   return memorizedFunction;
 }
@@ -44,7 +44,10 @@ export const utils = {
           const connection: VizceralConnection = {
             source: meshNode.peerId,
             target: peerId,
-            // TODO: metrics,
+            metrics: {
+              // HACK: message volume for some but not others
+              green: Math.round(Math.random()),
+            },
             metadata: peer,
           };
           connections.push(connection);
