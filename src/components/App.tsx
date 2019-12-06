@@ -150,17 +150,19 @@ const SidePanelHeaderSecondaryLabel = styled.div`
 
 export const App: React.FC = () => {
   const [openOrderCount, setOpenOrderCount] = useState<number | undefined>(undefined);
-  const [selectedNode, setSelectedNode] = useState<any /* need type? */ | undefined>(undefined);
+  const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined);
 
   const handleNodeClick = (clickNodeEvent: any | undefined) => {
     if (!clickNodeEvent) {
       // Implies a blur
-      return setSelectedNode(undefined);
+      return setSelectedNodeId(undefined);
     }
-    setSelectedNode(clickNodeEvent.name);
+    setSelectedNodeId(clickNodeEvent.name);
   };
 
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
+  const [selectedNode] = selectedNodeId ? traffic.nodes.filter(x => x.name === selectedNodeId) : [];
+
   useEffect(() => {
     const fetchAndSetTrafficAsync = async () => {
       const graph = await backendClient.getVizsceralGraphAsync();
