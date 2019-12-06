@@ -2,6 +2,8 @@ import { isEqual } from 'lodash';
 import React from 'react';
 import VizceralGraph from 'vizceral';
 
+import { colors } from '../theme';
+
 function getPerformanceNow(): number | null {
   const g = window;
   if (g != null) {
@@ -21,21 +23,18 @@ function getPerformanceNow(): number | null {
 }
 
 const defaultStyles = {
-  colorText: 'rgb(214, 214, 214)',
-  colorTextDisabled: 'rgb(129, 129, 129)',
+  colorText: colors.whiteText,
+  colorTextDisabled: colors.secondaryText,
   colorTraffic: {
     normal: 'rgb(186, 213, 237)',
     normalDonut: 'rgb(91, 91, 91)',
     warning: 'rgb(268, 185, 73)',
     danger: 'rgb(184, 36, 36)',
   },
-  colorNormalDimmed: 'rgb(101, 117, 128)',
-  colorBackgroundDark: 'rgb(35, 35, 35)',
-  colorLabelBorder: 'rgb(16, 17, 18)',
-  colorLabelText: 'rgb(0, 0, 0)',
-  colorDonutInternalColor: 'rgb(35, 35, 35)',
-  colorDonutInternalColorHighlighted: 'rgb(255, 255, 255)',
-  colorConnectionLine: 'rgb(91, 91, 91)',
+  colorLabelBorder: colors.greyBg,
+  colorLabelText: colors.black,
+  colorDonutInternalColor: colors.zeroExGreen,
+  colorConnectionLine: colors.darkGreyBg,
   colorPageBackground: 'rgb(45, 45, 45)',
   colorPageBackgroundTransparent: 'rgba(45, 45, 45, 0)',
   colorBorderLines: 'rgb(137, 137, 137)',
@@ -184,7 +183,7 @@ export class Vizceral extends React.Component<VizceralProps> {
 
   /* eslint-disable class-methods-use-this */
   public render(): React.ReactNode {
-    // tslint:disable-next-line:jsx-no-string-ref
+    // tslint:disable:jsx-no-string-ref
     return (
       <div className="vizceral">
         <canvas style={{ width: '100%', height: '100%' }} ref="vizCanvas" />

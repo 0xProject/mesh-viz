@@ -12,7 +12,7 @@ export interface VizceralConnection {
   target: string;
   metrics?: { [key: string]: number };
   // Show on hover
-  notices?: [];
+  notices?: any[];
   metadata?: { [key: string]: any };
 }
 
