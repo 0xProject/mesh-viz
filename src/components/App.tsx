@@ -496,7 +496,7 @@ export const App: React.FC = () => {
                         <NodeDetailValue>
                           {selectedNode?.metadata?.geo?.city
                             ? `${selectedNode.metadata.geo.city}, ${selectedNode.metadata.geo.country}`
-                            : selectedNode.metadata.geo.country
+                            : selectedNode?.metadata?.geo?.country
                             ? selectedNode.metadata.geo.country
                             : 'N/A'}
                         </NodeDetailValue>
