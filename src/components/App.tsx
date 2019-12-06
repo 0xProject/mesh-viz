@@ -11,12 +11,13 @@ import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { ReactComponent as XIconSvg } from '../svgs/x.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
+import { useOrderWatcher } from '../use_order_watcher';
+import { utils } from '../utils';
+
 import { Card } from './Card';
 import { Footer } from './Footer';
 import { Navigation } from './Navigation';
 import { Vizceral } from './Vizceral';
-import { useOrderWatcher } from '../use_order_watcher';
-import { utils } from '../utils';
 
 const baseTraffic: VizceralTraffic = {
   // Which graph renderer to use for this graph (currently only 'global' and 'region')

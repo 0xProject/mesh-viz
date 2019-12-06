@@ -3,6 +3,7 @@ import { assetDataUtils, ERC20AssetData } from '@0x/order-utils';
 import { compareDesc } from 'date-fns';
 import { uniqBy } from 'lodash';
 import { useState } from 'react';
+
 import { logger } from './logger';
 import { utils } from './utils';
 
@@ -68,7 +69,7 @@ export const useOrderWatcher = () => {
 
     const addOrders = async (orderEvents: OrderEvent[]) => {
       const orders = (await Promise.all(orderEvents.map(orderEvent => toOrder(orderEvent))).then(maybeOrders =>
-        maybeOrders.filter(o => !!o)
+        maybeOrders.filter(o => !!o),
       )) as Order[];
 
       appendOrders(orders.filter(o => [OrderEventEndState.Filled, OrderEventEndState.Added].includes(o.state)));
@@ -85,7 +86,7 @@ export const useOrderWatcher = () => {
 
   const sortedOrders = uniqBy(
     allOrders.sort((a, b) => compareDesc(a.time, b.time)),
-    o => o.orderHash
+    o => o.orderHash,
   );
 
   return { filledOrders: sortedOrders.filter(o => o.state === OrderEventEndState.Filled), allOrders: sortedOrders };
