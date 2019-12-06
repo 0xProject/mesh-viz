@@ -1,10 +1,11 @@
 import { OrderEvent, OrderEventEndState, WSClient } from '@0x/mesh-rpc-client';
 import { assetDataUtils, ERC20AssetData } from '@0x/order-utils';
 import { compareDesc } from 'date-fns';
-import { uniqBy } from 'lodash';
+import { partition, uniqBy } from 'lodash';
 import { useState } from 'react';
 
 import { logger } from '../logger';
+import { HistoricalAsset, HistoricalOrder } from '../types';
 import { utils } from '../utils';
 
 const MESH_ENDPOINT_V2 = 'wss://mesh.backend.sra.0x.org';
@@ -67,6 +68,14 @@ const sortAndDedupe = (orders: Order[]) =>
     o => o.orderHash
   );
 
+const parseAsset = (asset: HistoricalAsset) => ({
+  amount: parseFloat(asset.amount).toFixed(2),
+  tokenAddress: asset.tokenAddress,
+  tokenSymbol: asset.tokenSymbol,
+});
+
+const ERC20_TYPE = 'erc-20';
+
 export const useOrderWatcher = () => {
   const [filledOrders, setFilledOrders] = useState<Order[]>([]);
   const [addedOrders, setAddedOrders] = useState<Order[]>([]);
@@ -95,6 +104,30 @@ export const useOrderWatcher = () => {
 
     wsClientV3.subscribeToOrdersAsync(addOrders).catch(handleErr);
     wsClientV2.subscribeToOrdersAsync(addOrders).catch(handleErr);
+    utils
+      .getHistoricalFills()
+      .then((historicalOrders: HistoricalOrder[]) => {
+        const orders: Order[] = historicalOrders.reduce<Order[]>((memo, historicalOrder) => {
+          const [makerAssets, takerAssets] = partition(historicalOrder.assets, a => a.traderType === 'maker');
+          const makerAsset = makerAssets[0];
+          const takerAsset = takerAssets[0];
+
+          if (makerAsset?.type === ERC20_TYPE && takerAsset?.type === ERC20_TYPE) {
+            memo.push({
+              orderHash: historicalOrder.id,
+              state: OrderEventEndState.Filled,
+              time: new Date(historicalOrder.date),
+              makerAsset: parseAsset(makerAsset),
+              takerAsset: parseAsset(takerAsset),
+            });
+          }
+
+          return memo;
+        }, []);
+
+        setFilledOrders(oldFilledOrders => oldFilledOrders.concat(orders));
+      })
+      .catch(handleErr);
   }
 
   return {

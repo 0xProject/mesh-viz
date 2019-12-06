@@ -90,3 +90,17 @@ export interface MeshOrderRecievedMessage {
   name: 'NEW_MESH_ORDER_RECEIVED';
   payload: MeshOrderRecievedMessagePayload;
 }
+
+export interface HistoricalAsset {
+  amount: string;
+  tokenAddress: string;
+  tokenSymbol: string;
+  traderType: 'maker' | 'taker';
+  type: string;
+}
+
+export interface HistoricalOrder {
+  id: string;
+  date: string;
+  assets: HistoricalAsset[];
+}
