@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@0x/connect": "^6.0.0",
     "@0x/mesh-rpc-client": "^6.1.2-beta",
     "@0x/order-utils": "^9.0.0",
     "@nice-boys/components": "^0.2.1",

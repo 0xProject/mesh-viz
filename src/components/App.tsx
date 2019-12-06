@@ -4,6 +4,7 @@ import { Box, Flex, Text } from 'rebass';
 import styled from 'styled-components';
 
 import { backendClient } from '../backend_client';
+import { useOrderWatcher } from '../hooks/use_order_watcher';
 import { logger } from '../logger';
 import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
 import { ReactComponent as ConnectionsSvg } from '../svgs/modeling.svg';
@@ -11,7 +12,6 @@ import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
 import { ReactComponent as XIconSvg } from '../svgs/x.svg';
 import { colors } from '../theme';
 import { VizceralTraffic } from '../types';
-import { useOrderWatcher } from '../use_order_watcher';
 import { utils } from '../utils';
 
 import { Card } from './Card';
@@ -281,7 +281,7 @@ export const App: React.FC = () => {
   const [selectedNode] = selectedNodeId ? traffic.nodes.filter(x => x.name === selectedNodeId) : [];
 
   useEffect(() => {
-    const fetchAndSetTrafficAsync = async () => {
+    const fetchAndSetDataAsync = async () => {
       const graph = await backendClient.getVizsceralGraphAsync();
       setTraffic({
         ...baseTraffic,
@@ -289,7 +289,7 @@ export const App: React.FC = () => {
       });
     };
     // tslint:disable-next-line:no-floating-promises
-    fetchAndSetTrafficAsync();
+    fetchAndSetDataAsync();
   }, []);
 
   // Set fake data...
