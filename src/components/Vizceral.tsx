@@ -1,16 +1,15 @@
-/* tslint:disable */
-import { isEqual } from "lodash";
-import React from "react"; // eslint-disable-line import/no-unresolved, import/no-extraneous-dependencies
-import VizceralGraph from "vizceral";
+import { isEqual } from 'lodash';
+import React from 'react';
+import VizceralGraph from 'vizceral';
 
-function getPerformanceNow() {
+function getPerformanceNow(): number | null {
   const g = window;
   if (g != null) {
     const perf = g.performance;
     if (perf != null) {
       try {
         const perfNow = perf.now();
-        if (typeof perfNow === "number") {
+        if (typeof perfNow === 'number') {
           return perfNow;
         }
       } catch (e) {
@@ -21,6 +20,29 @@ function getPerformanceNow() {
   return null;
 }
 
+const defaultStyles = {
+  colorText: 'rgb(214, 214, 214)',
+  colorTextDisabled: 'rgb(129, 129, 129)',
+  colorTraffic: {
+    normal: 'rgb(186, 213, 237)',
+    normalDonut: 'rgb(91, 91, 91)',
+    warning: 'rgb(268, 185, 73)',
+    danger: 'rgb(184, 36, 36)',
+  },
+  colorNormalDimmed: 'rgb(101, 117, 128)',
+  colorBackgroundDark: 'rgb(35, 35, 35)',
+  colorLabelBorder: 'rgb(16, 17, 18)',
+  colorLabelText: 'rgb(0, 0, 0)',
+  colorDonutInternalColor: 'rgb(35, 35, 35)',
+  colorDonutInternalColorHighlighted: 'rgb(255, 255, 255)',
+  colorConnectionLine: 'rgb(91, 91, 91)',
+  colorPageBackground: 'rgb(45, 45, 45)',
+  colorPageBackgroundTransparent: 'rgba(45, 45, 45, 0)',
+  colorBorderLines: 'rgb(137, 137, 137)',
+  colorArcBackground: 'rgb(60, 60, 60)',
+};
+// tslint:disable:no-unbound-method
+// tslint:disable:no-empty
 export type VizceralProps = any;
 
 /**
@@ -30,7 +52,7 @@ export type VizceralProps = any;
  *
  * ## Setup
  * 1. Install package
- *    `npm install vizceral-react --save`
+ *    `npm install vizceralreact --save`
  * 2. import vizceral-react to start using
  *
  *    ```js
@@ -54,12 +76,11 @@ export type VizceralProps = any;
  * ## Props
  */
 export class Vizceral extends React.Component<VizceralProps> {
-  public vizceral: any;
   public static defaultProps = {
     connectionHighlighted: () => {},
     definitions: {},
     filters: [],
-    match: "",
+    match: '',
     nodeHighlighted: () => {},
     nodeUpdated: () => {},
     nodeContextSizeChanged: () => {},
@@ -69,24 +90,24 @@ export class Vizceral extends React.Component<VizceralProps> {
     objectToHighlight: null,
     showLabels: true,
     allowDraggingOfNodes: false,
-    styles: {},
     traffic: {},
     viewChanged: () => {},
     viewUpdated: () => {},
     view: [],
     targetFramerate: null,
   };
-  componentDidMount() {
+  public vizceral: any;
+  public componentDidMount(): void {
     this.vizceral = new VizceralGraph(this.refs.vizCanvas, this.props.targetFramerate);
-    this.updateStyles(this.props.styles);
+    this.updateStyles(defaultStyles);
 
-    this.vizceral.on("viewChanged", this.props.viewChanged);
-    this.vizceral.on("objectHighlighted", this.props.objectHighlighted);
-    this.vizceral.on("objectHovered", this.props.objectHovered);
-    this.vizceral.on("nodeUpdated", this.props.nodeUpdated);
-    this.vizceral.on("nodeContextSizeChanged", this.props.nodeContextSizeChanged);
-    this.vizceral.on("matchesFound", this.props.matchesFound);
-    this.vizceral.on("viewUpdated", this.props.viewUpdated);
+    this.vizceral.on('viewChanged', this.props.viewChanged);
+    this.vizceral.on('objectHighlighted', this.props.objectHighlighted);
+    this.vizceral.on('objectHovered', this.props.objectHovered);
+    this.vizceral.on('nodeUpdated', this.props.nodeUpdated);
+    this.vizceral.on('nodeContextSizeChanged', this.props.nodeContextSizeChanged);
+    this.vizceral.on('matchesFound', this.props.matchesFound);
+    this.vizceral.on('viewUpdated', this.props.viewUpdated);
 
     // Pass our defaults to Vizceral in the case that it has different defaults.
     this.vizceral.setOptions({
@@ -115,7 +136,7 @@ export class Vizceral extends React.Component<VizceralProps> {
     }, 0);
   }
 
-  UNSAFE_componentWillReceiveProps(nextProps: any) {
+  public UNSAFE_componentWillReceiveProps(nextProps: any): void {
     if (!isEqual(nextProps.styles, this.props.styles)) {
       this.updateStyles(nextProps.styles);
     }
@@ -157,22 +178,23 @@ export class Vizceral extends React.Component<VizceralProps> {
     }
   }
 
-  componentWillUnmount() {
+  public componentWillUnmount(): void {
     delete this.vizceral;
   }
 
   /* eslint-disable class-methods-use-this */
-  render() {
+  public render(): React.ReactNode {
+    // tslint:disable-next-line:jsx-no-string-ref
     return (
       <div className="vizceral">
-        <canvas style={{ width: "100%", height: "100%" }} ref="vizCanvas" />
-        <div className="vizceral-notice"></div>
+        <canvas style={{ width: '100%', height: '100%' }} ref="vizCanvas" />
+        <div className="vizceral-notice" />
       </div>
     );
   }
   /* eslint-enable class-methods-use-this */
 
-  updateStyles(styles: any) {
+  public updateStyles(styles: any): void {
     const styleNames = this.vizceral.getStyles();
     const customStyles = styleNames.reduce((result: any, styleName: any) => {
       result[styleName] = styles[styleName] || result[styleName];
@@ -250,25 +272,3 @@ export class Vizceral extends React.Component<VizceralProps> {
 //    */
 //   targetFramerate: PropTypes.number,
 // };
-
-Vizceral.defaultProps = {
-  connectionHighlighted: () => {},
-  definitions: {},
-  filters: [],
-  match: "",
-  nodeHighlighted: () => {},
-  nodeUpdated: () => {},
-  nodeContextSizeChanged: () => {},
-  matchesFound: () => {},
-  objectHighlighted: () => {},
-  objectHovered: () => {},
-  objectToHighlight: null,
-  showLabels: true,
-  allowDraggingOfNodes: false,
-  styles: {},
-  traffic: {},
-  viewChanged: () => {},
-  viewUpdated: () => {},
-  view: [],
-  targetFramerate: null,
-};

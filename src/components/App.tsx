@@ -220,7 +220,7 @@ export const App: React.FC = () => {
                 </GraphHeaderMetricContainer>
               </GraphHeaderContainer>
               <VizceralContainer>
-                {traffic.nodes.length > 0 &&
+                {traffic.nodes.length > 0 && (
                   // Hack updating traffic does not work at the moment
                   <Vizceral
                     traffic={traffic}
@@ -228,7 +228,7 @@ export const App: React.FC = () => {
                     viewUpdated={logger.bind(logger, 'viewUpdated')}
                     objectHighlighted={logger.bind(logger, 'objectHighlighted')}
                   />
-                }
+                )}
               </VizceralContainer>
             </MainGraphPanelContainer>
             <SidePanelContainer>
