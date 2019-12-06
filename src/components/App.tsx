@@ -1,11 +1,14 @@
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useInterval } from 'react-use';
 import { Box, Flex, Text } from 'rebass';
 import styled from 'styled-components';
 
 import { backendClient } from '../backend_client';
+import { DATA_POLL_DELAY_MS } from '../constants';
 import { useOrderWatcher } from '../hooks/use_order_watcher';
 import { logger } from '../logger';
+import { sraClient } from '../sra_client';
 import { ReactComponent as ActiveNodesSvg } from '../svgs/computing-cloud.svg';
 import { ReactComponent as ConnectionsSvg } from '../svgs/modeling.svg';
 import { ReactComponent as OrderbookSvg } from '../svgs/order-book-thing.svg';
@@ -280,22 +283,18 @@ export const App: React.FC = () => {
   const [traffic, setTraffic] = useState<VizceralTraffic>(baseTraffic);
   const [selectedNode] = selectedNodeId ? traffic.nodes.filter(x => x.name === selectedNodeId) : [];
 
-  useEffect(() => {
+  useInterval(() => {
     const fetchAndSetDataAsync = async () => {
-      const graph = await backendClient.getVizsceralGraphAsync();
+      const [graph, orders] = await Promise.all([backendClient.getVizsceralGraphAsync(), sraClient.getOrdersAsync()]);
       setTraffic({
         ...baseTraffic,
         ...graph,
       });
+      setOpenOrderCount(orders.total);
     };
     // tslint:disable-next-line:no-floating-promises
     fetchAndSetDataAsync();
-  }, []);
-
-  // Set fake data...
-  useEffect(() => {
-    setOpenOrderCount(37312);
-  }, []);
+  }, DATA_POLL_DELAY_MS);
 
   let connectionCount;
   let activeNodes;
