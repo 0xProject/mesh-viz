@@ -1,0 +1,12 @@
+{
+  "domain": "mesh-viz.0x.org",
+  "build_command": "yarn build",
+  "upload_directory": "build",
+  "index_key": "index.html",
+  "error_key": "index.html",
+  "cache": 3600,
+  "aws_profile": "default",
+  "aws_region": "us-west-2",
+  "cdn": true,
+  "dns_configured": true
+}
